@@ -1,11 +1,19 @@
 from Token import Token
+from Registro import Registro
 
 class Sintactico:
     total = ''
     preanalisis = Token.ERROR
     posicion = 0
     lista = []
+    tamano_val_registros = 0
+    contador_registros = 0
+    valor_actual = 0
+    entro_reg = False
     errorSintactico = False
+    print_consola = ''
+    valores = []
+    registros = Registro(-1)
 
     def __init__(self, lista):
         self.errorSintactico = False
@@ -16,7 +24,7 @@ class Sintactico:
         self.Inicio()
 
     def Match(self, tipo):
-        if self.preanalisis == tipo: #if self.preanalisis != tipo:
+        if self.preanalisis != tipo:
             print(self.lista[self.posicion].lexema_valido, "--> Sintactico", " -- Se esperaba "+str(tipo))
             self.errorSintactico = True
             
@@ -25,7 +33,11 @@ class Sintactico:
             self.preanalisis = self.lista[self.posicion].tipo
         
         if self.preanalisis == Token.ULTIMO:
-            print('Se finalizado el analisis sintactico')
+            print('Se ha finalizado el analisis sintactico')
+            #print(self.registros.valores[0].args[0], self.registros.valores[0].indice) #['1', '"Barbacoa"', '10.50', '20.00', '6'] 0
+            print(self.registros.valores[0].args[0][0], self.registros.valores[0].indice)
+            print(self.registros.valores[1].args[0][0], self.registros.valores[1].indice)
+            #print(len(self.registros.valores[1].args[0]), 'len')
 
     def Inicio(self):
         print('Inicio del analisis Sintáctico')
@@ -92,7 +104,7 @@ class Sintactico:
         self.Match(Token.CORCHETE_IZQUIERDO)
         self.Bloque_Registros()
         self.Match(Token.CORCHETE_DERECHO)
-
+        
     def Bloque_Registros(self):
         if Token.LLAVE_IZQUIERDA == self.preanalisis:
             self.Cuerpo_Registros()
@@ -102,13 +114,29 @@ class Sintactico:
         self.Match(Token.LLAVE_IZQUIERDA)
         self.valor_registro()
         self.Match(Token.LLAVE_DERECHA)
+        self.guardar_registro()
     
+    def guardar_registro(self):
+        if not self.entro_reg:
+            self.tamano_val_registros = len(self.valores)
+            self.entro_reg = True
+        values = self.valores[self.valor_actual:self.valor_actual + self.tamano_val_registros]
+        self.registros.agregar_registro(self.contador_registros, values)
+        self.contador_registros += 1
+        self.valor_actual += self.tamano_val_registros
+              
     def valor_registro(self):
         if Token.NUMERO == self.preanalisis:
+            nuevo = self.lista[self.posicion].lexema_valido
+            self.valores.append(nuevo)
             self.Match(Token.NUMERO)
         elif Token.CADENA == self.preanalisis:
+            nuevo = self.lista[self.posicion].lexema_valido
+            self.valores.append(nuevo)
             self.Match(Token.CADENA)    
         elif Token.DECIMAL == self.preanalisis:
+            nuevo = self.lista[self.posicion].lexema_valido
+            self.valores.append(nuevo)
             self.Match(Token.DECIMAL)
         if Token.COMA == self.preanalisis:
             self.Match(Token.COMA)
@@ -123,6 +151,7 @@ class Sintactico:
     def Imprimir(self):
         self.Match(Token.IMPRIMIR)
         self.Match(Token.PARENTESIS_IZQUIERDO)
+        self.print_consola += self.lista[self.posicion].lexema_valido
         self.Match(Token.CADENA)
         self.Match(Token.PARENTESIS_DERECHO)
         self.Match(Token.PUNTO_Y_COMA) 
@@ -130,10 +159,11 @@ class Sintactico:
     def ImprimirLn(self):
         self.Match(Token.IMPRIMIRLN)
         self.Match(Token.PARENTESIS_IZQUIERDO)
+        self.print_consola += self.lista[self.posicion].lexema_valido
         self.Match(Token.CADENA)
         self.Match(Token.PARENTESIS_DERECHO)
         self.Match(Token.PUNTO_Y_COMA) 
-    
+        
     def Conteo(self):
         self.Match(Token.CONTEO)
         self.Match(Token.PARENTESIS_IZQUIERDO)

@@ -3,7 +3,7 @@ import re
 import webbrowser
 
 class Analizador():
-    indice_nombre_imagen = 1
+    
     reporteHTML_token = ''
     reporteHTML_errores = ''
     lexema = ''
@@ -96,12 +96,6 @@ class Analizador():
                     self.columna += 1  
                     self.lexema += actual                    
                     self.agregar_token(self.tipos.PUNTO_Y_COMA)       
-                                      
-                #elif actual == '=' or actual == '[' or actual == ']' or actual == '(' or actual == ')' or actual == ',' or actual == ';':
-                #    self.estado = 4
-                #    self.columna += 1  
-                #    self.lexema += actual                    
-                #    self.agregar_token(self.tipos.SIGNO)
                 
                 elif actual == "'":
                     self.estado = 5
@@ -252,8 +246,7 @@ class Analizador():
         return re.sub(patron, '', entrada)
     
     def es_palabra_reserva(self, entrada):
-        entrada = entrada.upper() 
-        #palabras_reservadas = ['CLAVES', 'REGISTROS', 'IMPRIMIR', 'IMPRIMIRLN', 'CONTEO', 'PROMEDIO', 'CONTARSI', 'DATOS', 'SUMAR', 'MAX', 'MIN', 'EXPORTARREPORTE']
+        entrada = entrada.upper()
         if entrada == 'CLAVES':
             self.agregar_token(self.tipos.CLAVES)
             return True
@@ -291,129 +284,6 @@ class Analizador():
             self.agregar_token(self.tipos.EXPORTARREPORTE)
             return True
         return False
-   
-    def guardar_imagen(self):
-        titulo = ''
-        filas = 0
-        columnas = 0
-        ancho = 0
-        alto = 0
-        cantidad_colores = 0
-        mirrorx = False
-        mirrory = False
-        doublemirror = False
-        valor = False        
-        indice_imagen = 0
-        tamano = len(self.tokens)
-        counter = 0        
-        id_token = -1    
-        id_coordenada = -1
-        lexema = ''
-        entro_primera_coordenada = False   
-        for token in self.tokens:
-            if token.get_lexema() == 'TITULO':
-                id_token = token.get_id()
-                
-            elif token.tipo == self.tipos.CADENA  and id_token == int(token.get_id()) - 2:
-                titulo = token.get_lexema()
-                titulo = titulo.replace('"','')      
-                id_token = -1
-                
-            elif token.get_lexema() == 'ANCHO':
-                lexema = token.get_lexema()
-                id_token = token.get_id()
-                
-            elif token.tipo == self.tipos.NUMERO and id_token == int(token.get_id()) - 2 and lexema == 'ANCHO':
-                ancho = token.get_lexema()   
-                id_token = -1
-                
-            elif token.get_lexema() == 'ALTO':
-                lexema = token.get_lexema()
-                id_token = token.get_id()
-                
-            elif token.tipo == self.tipos.NUMERO and id_token == int(token.get_id()) - 2 and lexema == 'ALTO':
-                alto = token.get_lexema()   
-                id_token = -1
-                    
-            elif token.get_lexema() == 'FILAS':
-                lexema = token.get_lexema()
-                id_token = token.get_id()
-                
-            elif token.tipo == self.tipos.NUMERO and id_token == int(token.get_id()) - 2 and lexema == 'FILAS':
-                filas = token.get_lexema()     
-                id_token = -1
-                
-            elif token.get_lexema() == 'COLUMNAS':
-                lexema = token.get_lexema()
-                id_token = token.get_id()
-                
-            elif token.tipo == self.tipos.NUMERO and id_token == int(token.get_id()) - 2 and lexema == 'COLUMNAS':
-                columnas = token.get_lexema()     
-                id_token = -1
-                
-            elif token.get_lexema() == 'CELDAS':
-                lexema = token.get_lexema()
-                id_token = token.get_id()
-            
-            elif token.get_lexema() == 'FILTROS':
-                lexema = token.get_lexema()
-                id_token = token.get_id()    
-            
-            if id_coordenada == int(token.get_id()) - 9: #saber si ya toca otra linea de colores
-                coordenada_x = -1
-                coordenada_y = -1
-                
-            if token.tipo == self.tipos.NUMERO and lexema == 'CELDAS' :
-                #LAS PRIMERAS COORDENADAS
-                if coordenada_x == -1 and id_token == int(token.get_id()) - 4 and entro_primera_coordenada == False:
-                    coordenada_x = token.get_lexema()
-                    id_coordenada = token.get_id()
-                    
-                elif coordenada_y == -1 and id_token == int(token.get_id()) - 6 and entro_primera_coordenada == False:
-                    coordenada_y = token.get_lexema() 
-                    entro_primera_coordenada = True 
-                    
-                #SIGUIENTES CELDAS
-                if coordenada_x == -1 and id_coordenada == int(token.get_id()) - 10:
-                    coordenada_x = token.get_lexema()
-                    id_coordenada = token.get_id()
-                    
-                elif coordenada_y == -1 and id_coordenada == int(token.get_id()) - 2:
-                    coordenada_y = token.get_lexema() 
-                    
-            elif token.tipo == self.tipos.BOOL and lexema == 'CELDAS' and id_coordenada == int(token.get_id()) - 4:
-                if token.get_lexema() == 'TRUE':
-                    valor = True
-                elif token.get_lexema() == 'FALSE':
-                    valor = False     
-            
-            elif token.tipo == self.tipos.COLOR and lexema == 'CELDAS' and id_coordenada == int(token.get_id()) - 6:
-                codigo_color = token.get_lexema()
-                self.colores.agregar_color(coordenada_x, coordenada_y, valor, codigo_color, indice_imagen)
-                cantidad_colores += 1
-                #print(coordenada_x, coordenada_y,valor,codigo_color)
-            
-            if token.get_lexema() == 'MIRRORX': 
-                mirrorx = True
-            elif token.get_lexema() == 'MIRRORY':
-                mirrory = True
-            elif token.get_lexema() == 'DOUBLEMIRROR':
-                doublemirror = True
-                
-            if token.get_lexema() == '@@@@' or counter == tamano - 1 :
-                #nueva_imagen = Imagen(titulo, filas, columnas, ancho, alto, mirrorx, mirrory, doublemirror ,cantidad_colores, indice_imagen)
-                #self.imagenes.append(nueva_imagen)
-                indice_imagen += 1
-                #REINICIO DE LAS VARIABLES
-                id_token = -1    
-                id_coordenada = -1
-                lexema = ''
-                entro_primera_coordenada = False   
-                valor = False   
-                cantidad_colores = 0
-                #print(titulo, ancho, alto, filas, columnas)
-                
-            counter += 1  
    
     def opciones_imagenes(self, combo):
         nombres = []

@@ -47,7 +47,8 @@ class Interfaz():
         self.txt_consola.insert(tkinter.INSERT, 'Hola')  
         
     def analizar_archivo(self):
-        self.lexico.analizador_estados(self.data)
+        contenido_Text = self.txt_entrada.get("1.0", tkinter.END)
+        self.lexico.analizador_estados(contenido_Text)
         #self.lexico.obtener_tokens()
         #self.lexico.guardar_imagen()        
         #self.configuracion_combo(combo_imagenes)
