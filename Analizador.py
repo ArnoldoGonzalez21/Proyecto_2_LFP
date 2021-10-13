@@ -11,16 +11,16 @@ class Analizador():
     tokens = []
     columna = 1
     fila = 1
-    id = 0
-    tipos = Token("lexema", -1, -1, -1, -1)
+    tipos = Token("lexema", -1, -1, -1)
     
     def agregar_token(self, tipo):
-        nuevo_token = Token(self.lexema, tipo, self.fila, self.columna, self.id)
+        nuevo_token = Token(self.lexema, tipo, self.fila, self.columna)
         self.tokens.append(nuevo_token)
         self.lexema = ''
         self.estado = 0
-        if tipo != 28:
-            self.id += 1
+    
+    def reiniciar_tokens(self):
+        self.tokens.clear()
             
     def analizador_estados(self, entrada):
         self.estado = 0
@@ -28,7 +28,6 @@ class Analizador():
         self.tokens = []
         self.fila = 1
         self.columna = 1
-        #entrada = self.quitar_espacios(entrada)
         entrada = self.separar(entrada)
         entrada += '`'
         #print(entrada)
@@ -126,6 +125,7 @@ class Analizador():
                 elif actual == '`' and contador == longitud - 1:
                     self.lexema = '`'
                     self.agregar_token(self.tipos.ULTIMO)
+                    print('-----------------------------------LEN------------------------------------',len(self.tokens))
                     print('Análisis terminado')
                     
                 else:
@@ -237,13 +237,8 @@ class Analizador():
                     self.agregar_token(self.tipos.ERROR)  
         
     def separar(self, entrada):
-        #patron = r'(\w)([,-;-{-}-(-)-\[-\]-\=])'
         patron = r'(\w)([= - { - } - , - ; - ( - ) - \[ - \] ])'
-        return re.sub(patron, r'\1 \2 ', entrada)                           
-    
-    def quitar_espacios(self, entrada):
-        patron = ' +'#hacer que quite los espacios en solo esos que me interesa los  = [ ] etc
-        return re.sub(patron, '', entrada)
+        return re.sub(patron, r'\1 \2 ', entrada)      
     
     def es_palabra_reserva(self, entrada):
         entrada = entrada.upper()
@@ -297,7 +292,7 @@ class Analizador():
         for x in self.tokens:
             if x.tipo != self.tipos.ERROR:
                 self.reporteHTML_token += '<tr><td align=center>'+ font + x.get_tipo() + '</td><td align=center>'+ font + x.get_lexema() + '</td><td align=center>'+ font + str(x.get_fila()) + '</td><td align=center>'+ font + str(x.get_columna()) + '</td></tr>'
-                print(x.get_lexema()," --> ",x.get_tipo(),' --> ',x.get_fila(), ' --> ',x.get_columna(), ' --> ',x.get_id())
+                print(x.get_lexema()," --> ",x.get_tipo(),' --> ',x.get_fila(), ' --> ',x.get_columna())
     
     def obtener_errores(self):
         font = '<font color=\"#000000\" face=\"Courier\">'

@@ -1,6 +1,7 @@
 from Token import Token
 from Registro import Registro
 from Clave import Clave
+import webbrowser
 
 class Sintactico:
     
@@ -16,13 +17,14 @@ class Sintactico:
     valores_registro = []
     valores_clave = []
     registros = Registro(-1)
+    reporteHTML_registro = ''
 
     def __init__(self, tkinter, lista, txt_consola):
         self.errorSintactico = False
         self.lista = lista
         self.tkinter = tkinter
         self.txt_consola = txt_consola
-        self.lista.append(Token('`', Token.ULTIMO, -1, -1, -1))
+        self.lista.append(Token('`', Token.ULTIMO, -1, -1))
         self.posicion = 0
         self.preanalisis = self.lista[self.posicion].tipo
         self.Inicio()
@@ -180,7 +182,7 @@ class Sintactico:
         self.Match(Token.PUNTO_Y_COMA) 
         
         print_consola = print_consola.replace('"','')
-        self.txt_consola.insert(self.tkinter.INSERT, '\n'+ print_consola + '\n')  
+        self.txt_consola.insert(self.tkinter.INSERT, '\n' + print_consola + '\n')  
         
     def Conteo(self):
         self.Match(Token.CONTEO)
@@ -189,7 +191,7 @@ class Sintactico:
         self.Match(Token.PUNTO_Y_COMA)
         
         print_consola = len(self.registros.valores)
-        self.txt_consola.insert(self.tkinter.INSERT, str(print_consola))  
+        self.txt_consola.insert(self.tkinter.INSERT, '>>> ' + str(print_consola))  
     
     def Promedio(self):
         self.Match(Token.PROMEDIO)
@@ -213,9 +215,9 @@ class Sintactico:
                 suma += int(self.registros.valores[i].args[0][indice])
         if es_promedio and len(self.registros.valores) != 0:
             promedio = suma/len(self.registros.valores) 
-            self.txt_consola.insert(self.tkinter.INSERT, str(promedio))  
+            self.txt_consola.insert(self.tkinter.INSERT, '>>> ' + str(promedio))  
         else:
-            self.txt_consola.insert(self.tkinter.INSERT, str(suma))   
+            self.txt_consola.insert(self.tkinter.INSERT, '>>> ' + str(suma))   
         
     def ContarSi(self):
         self.Match(Token.CONTARSI)
@@ -241,37 +243,46 @@ class Sintactico:
             for i in range(len(self.registros.valores)):
                 if int(valor) == int(self.registros.valores[i].args[0][indice]):
                     contador += 1
-            self.txt_consola.insert(self.tkinter.INSERT, str(contador)+'\n')   
+            self.txt_consola.insert(self.tkinter.INSERT, '>>> ' + str(contador)+'\n')   
     
     def Datos(self):
         self.Match(Token.DATOS)
         self.Match(Token.PARENTESIS_IZQUIERDO)
         self.Match(Token.PARENTESIS_DERECHO)     
         self.Match(Token.PUNTO_Y_COMA)   
-        self.obtener_datos()            
+        self.obtener_datos(False)            
     
-    def obtener_datos(self):
+    def obtener_datos(self, es_reporte):
+        self.reporteHTML_registro += '<tr>'
         contenido = ''
         contador = 0
         for claves in self.valores_clave:
-            contenido += claves.get_nombre()
+            contenido += claves.get_nombre().replace('_',' ')
+            self.reporteHTML_registro += '<td align=center><font color=\"#000000\" face=\"Courier\"><strong>'+claves.get_nombre().replace('_',' ')+'</strong></td>'
             contador += 1
             if contador != len(self.valores_clave):
                 contenido += ' - '       
         contenido += '\n'    
         contador = 0
+        self.reporteHTML_registro += '</tr>'
         
         for i in range(len(self.registros.valores)):
+            self.reporteHTML_registro += '<tr>'
             for claves in self.valores_clave:
                 contenido += self.registros.valores[i].args[0][claves.get_indice()]
+                self.reporteHTML_registro += '<td align=center><font color=\"#000000\" face=\"Courier\">'+self.registros.valores[i].args[0][claves.get_indice()]+'</td>'
+
                 contador += 1
                 if contador != len(self.valores_clave):
                     contenido += ' - '
                 else:
                     contador = 0
+            self.reporteHTML_registro += '</tr>'
             contenido += '\n'  
-              
-        self.txt_consola.insert(self.tkinter.INSERT, contenido+'\n')
+         
+        if not es_reporte:     
+            self.txt_consola.insert(self.tkinter.INSERT, contenido+'\n')
+            self.reporteHTML_registro = ''
     
     def Sumar(self):
         self.Match(Token.SUMAR)
@@ -310,9 +321,9 @@ class Sintactico:
                 if tmp < minimo:
                     minimo = tmp 
         if es_max:               
-            self.txt_consola.insert(self.tkinter.INSERT, str(maximo))
+            self.txt_consola.insert(self.tkinter.INSERT, '>>> ' + str(maximo))
         else:
-            self.txt_consola.insert(self.tkinter.INSERT, str(minimo))    
+            self.txt_consola.insert(self.tkinter.INSERT, '>>> ' + str(minimo))    
         
     def Min(self):
         self.Match(Token.MIN)
@@ -327,9 +338,39 @@ class Sintactico:
     def Exportar_Reporte(self):
         self.Match(Token.EXPORTARREPORTE)
         self.Match(Token.PARENTESIS_IZQUIERDO)
+        nombre = self.lista[self.posicion].lexema_valido
         self.Match(Token.CADENA)
         self.Match(Token.PARENTESIS_DERECHO)     
-        self.Match(Token.PUNTO_Y_COMA)      
+        self.Match(Token.PUNTO_Y_COMA)   
+        nombre = nombre.replace('"','')    
+        self.crear_reporte_registro(nombre)
+    
+    def reniciar(self):
+        self.lista.clear()
+        self.valores_registro.clear()
+        self.registros.reiniciar_registro()
+        self.valores_clave.clear()
+    
+    def crear_reporte_registro(self, nombre):
+        self.obtener_datos(True)
+        try: 
+            file = open(nombre + '.html','w')
+            head = '<head><title>Reporte Registro</title></head>\n'
+            body = "<body bgcolor=\"#B6F49D\">"
+            body += "<table width=\"600\" bgcolor=#B6F49D align=left> <tr> <td><font color=\"black\" FACE=\"Courier\">" 
+            body += "<p align=\"left\">Arnoldo Luis Antonio González Camey &nbsp;—&nbsp; Carné: 201701548</p></font>"
+            body += "</td> </tr></table></br></br>"
+            body += '<h2 align=\"center\"><font color=\"black\" FACE=\"Courier\">'+nombre+'</h2>'
+            body += '<table width=\"1000\" bgcolor=#CDF9BA align=center style="border:5px dashed brown">'
+            body += self.reporteHTML_registro +'</table></body>'
+            html = '<html>\n' + head + body + '</html>'
+            file.write(html)
+            print('Reporte de Registro generado exitosamente')
+        except OSError:
+            print("Error al crear el Reporte de Registro")
+        finally:         
+            file.close()
+            webbrowser.open_new_tab(nombre + '.html')        
     
     def Repetir(self):
         if Token.CLAVES == self.preanalisis:

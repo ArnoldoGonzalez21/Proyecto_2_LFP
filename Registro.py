@@ -6,4 +6,7 @@ class Registro():
         
     def agregar_registro(self, indice, values):
         nuevo = Registro(indice, values)
-        self.valores.append(nuevo)       
+        self.valores.append(nuevo)
+    
+    def reiniciar_registro(self):
+        self.valores.clear()           

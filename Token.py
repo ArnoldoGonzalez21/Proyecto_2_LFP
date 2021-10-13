@@ -35,12 +35,11 @@ class Token():
     ERROR = 28
     ULTIMO = 29
     
-    def __init__(self, lexema, tipo, fila, columna, id):
+    def __init__(self, lexema, tipo, fila, columna):
         self.lexema_valido = lexema
         self.tipo = tipo
         self.fila = fila
         self.columna = columna
-        self.id = id
        
     def get_tipo(self):
         if self.tipo == self.CLAVES or self.tipo == self.REGISTROS or self.tipo == self.IMPRIMIR or self.tipo == self.IMPRIMIRLN: 
@@ -78,6 +77,3 @@ class Token():
     
     def get_columna(self):
         return self.columna
-    
-    def get_id(self):
-        return self.id 
