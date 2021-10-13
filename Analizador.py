@@ -237,7 +237,7 @@ class Analizador():
                     self.agregar_token(self.tipos.ERROR)  
         
     def separar(self, entrada):
-        #patron = r'(\w)([,-;-(-)-\[-\]-\=])'
+        #patron = r'(\w)([,-;-{-}-(-)-\[-\]-\=])'
         patron = r'(\w)([= - { - } - , - ; - ( - ) - \[ - \] ])'
         return re.sub(patron, r'\1 \2 ', entrada)                           
     
