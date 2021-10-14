@@ -13,8 +13,7 @@ class Interfaz():
     ventana = tkinter.Tk()     
     
     def __init__(self):
-        self.configuracion_ventana()        
-        combo_imagenes = ttk.Combobox(self.ventana, font = ('Courier', 11), state = "readonly")
+        self.configuracion_ventana()    
         self.crear_toolbar()
         self.crear_txt()
         self.ventana.mainloop()
@@ -27,9 +26,8 @@ class Interfaz():
         toolbar = Frame(self.ventana, bg = 'white')         
         boton_abrir = tkinter.Button(toolbar, text = 'Abrir', command = self.leer_archivo, width = 10, height = 2)
         boton_analizar = tkinter.Button(toolbar, text = 'Analizar', command = self.analizar_archivo, width = 10, height = 2)
-        boton_reportes = tkinter.Button(toolbar, text = 'Reportes', command = self.crear_reportes,  width = 10, height = 2)
+        boton_reportes = tkinter.Button(toolbar, text = 'Reporte', command = self.crear_reportes,  width = 10, height = 2)
         boton_salir = tkinter.Button(toolbar, text = 'Salir', command = lambda: exit(), width = 10, height = 2)
-        
         label_titulo = tkinter.Label(toolbar, text = "Proyecto 2 - 201701548", font = ('Courier', 11), bg = 'white')
         label_entrada = tkinter.Label(self.ventana, text = "Terminal de Entrada", font = ('Courier', 13))
         label_consola = tkinter.Label(self.ventana, text = "Consola", font = ('Courier', 13))
@@ -37,6 +35,7 @@ class Interfaz():
         label_titulo.pack(side = LEFT, padx = 3, pady = 2)
         boton_salir.pack(side = RIGHT, padx = 3, pady = 2)
         boton_reportes.pack(side = RIGHT, padx = 3, pady = 2) 
+        self.configuracion_combo(toolbar)
         boton_analizar.pack(side = RIGHT, padx = 3, pady = 2)
         boton_abrir.pack(side = RIGHT, padx = 3, pady = 2)
         toolbar.pack(side = TOP, fill = X)
@@ -65,22 +64,25 @@ class Interfaz():
         self.lexico.reiniciar_tokens()
         self.lexico.analizador_estados(contenido_Text)
         
-        sintactico = Sintactico(tkinter, self.lexico.tokens, self.txt_consola)
+        self.sintactico = Sintactico(tkinter, self.lexico.tokens, self.txt_consola)
         self.txt_consola.configure(state = 'disabled')
         self.lexico.obtener_tokens()      
-        sintactico.reniciar()
-        #self.configuracion_combo(combo_imagenes)
+        self.sintactico.reniciar()
     
-    def configuracion_combo(self, combo_imagenes):
-        self.lexico.opciones_imagenes(combo_imagenes)
-        combo_imagenes.place(x = 370, y = 30)
+    def configuracion_combo(self, toolbar):    
+        self.combo_reportes = ttk.Combobox(toolbar, font = ('Courier', 9), width = 25,  state = "readonly")
+        self.combo_reportes["values"] = ["Seleccione el Reporte", "Reporte Tokens", "Reporte Errores Léxicos", "Reporte Error Sintáctico"]
+        self.combo_reportes.current(0)
+        self.combo_reportes.pack(side = RIGHT, padx = 3, pady = 2) 
         
     def crear_reportes(self):
-        #self.lexico.obtener_tokens()
-        #self.lexico.obtener_errores()
-        #self.lexico.crear_reporte_token()
-        #self.lexico.crear_reporte_errores()
-        pass
+        indice = self.combo_reportes.current()
+        if indice == 1:
+            self.lexico.crear_reporte_token()
+        elif indice == 2:
+            self.lexico.crear_reporte_errores()
+        elif indice == 3:
+            self.sintactico.crear_reporte_errores_sintactico()
         
     def leer_archivo(self):
         try:

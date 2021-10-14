@@ -69,6 +69,64 @@ class Token():
         elif self.tipo == self.ULTIMO:
             return 'Ultimo'
     
+    def get_tipo_token_sintactico(self, tipo):
+        if tipo == self.CLAVES: 
+            return 'Tk_Claves'
+        elif tipo == self.REGISTROS:
+            return 'Tk_Registro'
+        elif tipo == self.IMPRIMIR:
+            return 'Tk_Imprimir'
+        elif tipo == self.IMPRIMIRLN:
+            return 'Tk_ImprimirLn'
+        elif tipo == self.CONTEO:
+            return 'Tk_Conteo'
+        elif tipo == self.PROMEDIO:
+            return 'Tk_Promedio'
+        elif tipo == self.CONTARSI:
+            return 'Tk_ContarSi'
+        elif tipo == self.DATOS:
+            return 'Tk_DATOS'        
+        elif tipo == self.SUMAR: 
+            return 'Tk_Sumar'
+        elif tipo == self.MAX:
+            return 'Tk_Max'
+        elif tipo == self.MIN:
+            return 'Tk_Min'
+        elif tipo == self.EXPORTARREPORTE:
+            return 'Tk_Exportar_Reporte'
+        elif tipo == self.LETRA:
+            return 'Tk_Letra'
+        elif tipo == self.NUMERO:
+            return 'Tk_Numero'
+        elif tipo == self.CADENA:
+            return 'Tk_Cadena'
+        elif tipo == self.IGUAL:
+            return 'Tk_Igual'
+        elif tipo == self.CORCHETE_IZQUIERDO:
+            return 'Tk_Corchete_Izquierdo'
+        elif tipo == self.CORCHETE_DERECHO:
+            return 'Tk_Corchete_Derecho'
+        elif tipo == self.PUNTO_Y_COMA:
+            return 'Tk_Punto_y_Coma'
+        elif tipo == self.PARENTESIS_IZQUIERDO:
+            return 'Tk_Parentesis_Izquierdo'
+        elif tipo == self.PARENTESIS_DERECHO:
+            return 'Tk_Parentesis_Derecho'
+        elif tipo == self.COMA:
+            return 'Tk_Coma'
+        elif tipo == self.LLAVE_DERECHA:
+            return 'Tk_LLave_Derecha'
+        elif tipo == self.LLAVE_IZQUIERDA:
+            return 'Tk_LLave_Izquierda'
+        elif tipo == self.COMENTARIO_MULTILINEA:
+            return 'Comentario Multilinea'
+        elif tipo == self.COMENTARIO_LINEA:
+            return 'Comentario una Linea'
+        elif tipo == self.DECIMAL:
+            return 'Decimal'
+        elif tipo == self.ULTIMO:
+            return 'Ultimo'
+    
     def get_lexema(self):
         return self.lexema_valido 
        

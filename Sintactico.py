@@ -5,6 +5,7 @@ import webbrowser
 
 class Sintactico:
     
+    tipos = Token('',-1,-1,-1)
     preanalisis = Token.ERROR
     posicion = 0
     lista = []
@@ -18,6 +19,9 @@ class Sintactico:
     valores_clave = []
     registros = Registro(-1)
     reporteHTML_registro = ''
+    reporte_error_sintac = ''
+    fila = 1
+    columna = 1
 
     def __init__(self, tkinter, lista, txt_consola):
         self.errorSintactico = False
@@ -31,7 +35,11 @@ class Sintactico:
 
     def Match(self, tipo):
         if self.preanalisis != tipo:
-            print(self.lista[self.posicion].lexema_valido, "--> Sintactico", " -- Se esperaba "+str(tipo))
+            font = '<font color=\"#000000\" face=\"Courier\">'
+            print(self.lista[self.posicion].lexema_valido, "--> Sintactico", " -- Se esperaba "+str(self.tipo_token(tipo)))
+            self.reporte_error_sintac += '<tr><td align=center>'+ font + self.lista[self.posicion].lexema_valido + ' --> Se esperaba --> ' + str(self.tipo_token(tipo))
+            self.reporte_error_sintac += '</td><td align=center><font color=\"#155CFF\" face=\"Courier\">Error Sintáctico </td><td align=center>'+ font + str(self.lista[self.posicion].fila)
+            self.reporte_error_sintac += '</td><td align=center>'+ font + str(self.lista[self.posicion].columna) + '</td></tr>'
             self.errorSintactico = True
             
         if self.preanalisis != Token.ULTIMO:
@@ -40,13 +48,11 @@ class Sintactico:
         
         if self.preanalisis == Token.ULTIMO:
             print('Se ha finalizado el analisis sintactico')
-            #for i in self.valores_clave:
-            #    print(i.get_nombre(), i.get_indice())
-            #print(self.registros.valores[0].args[0], self.registros.valores[0].indice) #['1', '"Barbacoa"', '10.50', '20.00', '6'] 0
-            #print(self.registros.valores[0].args[0][0], self.registros.valores[0].indice)
-            #print(self.registros.valores[1].args[0][0], self.registros.valores[1].indice)
-            #print(len(self.registros.valores[1].args[0]), 'len')
-
+    
+    def tipo_token(self, tipo):
+        nombre_Tk = self.tipos.get_tipo_token_sintactico(tipo)
+        return nombre_Tk
+    
     def Inicio(self):
         print('Inicio del analisis Sintáctico')
         if Token.CLAVES == self.preanalisis:
@@ -356,10 +362,10 @@ class Sintactico:
         try: 
             file = open(nombre + '.html','w')
             head = '<head><title>Reporte Registro</title></head>\n'
-            body = "<body bgcolor=\"#B6F49D\">"
-            body += "<table width=\"600\" bgcolor=#B6F49D align=left> <tr> <td><font color=\"black\" FACE=\"Courier\">" 
-            body += "<p align=\"left\">Arnoldo Luis Antonio González Camey &nbsp;—&nbsp; Carné: 201701548</p></font>"
-            body += "</td> </tr></table></br></br>"
+            body = '''<body bgcolor=\"#B6F49D\">
+                    <table width=\"600\" bgcolor=#B6F49D align=left> <tr> <td><font color=\"black\" FACE=\"Courier\">
+                    <p align=\"left\">Arnoldo Luis Antonio González Camey &nbsp;—&nbsp; Carné: 201701548</p></font>
+                    </td> </tr></table></br></br>'''
             body += '<h2 align=\"center\"><font color=\"black\" FACE=\"Courier\">'+nombre+'</h2>'
             body += '<table width=\"1000\" bgcolor=#CDF9BA align=center style="border:5px dashed brown">'
             body += self.reporteHTML_registro +'</table></body>'
@@ -371,6 +377,32 @@ class Sintactico:
         finally:         
             file.close()
             webbrowser.open_new_tab(nombre + '.html')        
+    
+    def crear_reporte_errores_sintactico(self):
+        try: 
+            file = open('Reporte_Errores_Sintactico.html','w')
+            head = '<head><title>Reporte Registro</title></head>\n'
+            body = '''<body bgcolor=\"#B6F49D\">
+                    <table width=\"600\" bgcolor=#B6F49D align=left> <tr> <td><font color=\"black\" FACE=\"Courier\">
+                    <p align=\"left\">Arnoldo Luis Antonio González Camey &nbsp;—&nbsp; Carné: 201701548</p></font>
+                    </td> </tr></table></br></br>
+                    <h2 align=\"center\"><font color=\"black\" FACE=\"Courier\">Reporte Errores Sintáctico</h2>
+                    <table width=\"1250\" bgcolor=#CDF9BA align=center style="border:5px dashed brown">
+                    <tr>
+                        <td align=center><font color=\"#000000\" face=\"Courier\"><strong>Error Lexema</strong></td>
+                        <td align=center><font color=\"#000000\" face=\"Courier\"><strong>Error</strong></td>
+                        <td align=center><font color=\"#000000\" face=\"Courier\"><strong>Fila</strong></td>
+                        <td align=center><font color=\"#000000\" face=\"Courier\"><strong>Columna</strong></td>    
+                    </tr>''' 
+            body += self.reporte_error_sintac +'</table></body>'
+            html = '<html>\n' + head + body + '</html>'
+            file.write(html)
+            print('Reporte de errores sintácticos generado exitosamente')
+        except OSError:
+            print("Error al crear el Reporte de errores sintácticos")
+        finally:         
+            file.close()
+            webbrowser.open_new_tab('Reporte_Errores_Sintactico.html')
     
     def Repetir(self):
         if Token.CLAVES == self.preanalisis:

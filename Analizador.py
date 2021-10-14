@@ -18,9 +18,6 @@ class Analizador():
         self.tokens.append(nuevo_token)
         self.lexema = ''
         self.estado = 0
-    
-    def reiniciar_tokens(self):
-        self.tokens.clear()
             
     def analizador_estados(self, entrada):
         self.estado = 0
@@ -125,7 +122,6 @@ class Analizador():
                 elif actual == '`' and contador == longitud - 1:
                     self.lexema = '`'
                     self.agregar_token(self.tipos.ULTIMO)
-                    print('-----------------------------------LEN------------------------------------',len(self.tokens))
                     print('Análisis terminado')
                     
                 else:
@@ -280,43 +276,40 @@ class Analizador():
             return True
         return False
    
-    def opciones_imagenes(self, combo):
-        nombres = []
-        values = list(combo["values"])
-        for img in self.imagenes:
-            nombres.append(img.titulo) 
-        combo["values"] = values + nombres
-    
+    def reiniciar_tokens(self):
+        self.tokens.clear()
+        
     def obtener_tokens(self):
         font = '<font color=\"#000000\" face=\"Courier\">'
         for x in self.tokens:
             if x.tipo != self.tipos.ERROR:
                 self.reporteHTML_token += '<tr><td align=center>'+ font + x.get_tipo() + '</td><td align=center>'+ font + x.get_lexema() + '</td><td align=center>'+ font + str(x.get_fila()) + '</td><td align=center>'+ font + str(x.get_columna()) + '</td></tr>'
-                print(x.get_lexema()," --> ",x.get_tipo(),' --> ',x.get_fila(), ' --> ',x.get_columna())
+                #print(x.get_lexema()," --> ",x.get_tipo(),' --> ',x.get_fila(), ' --> ',x.get_columna())
     
-    def obtener_errores(self):
+    def obtener_errores_lexico(self):
         font = '<font color=\"#000000\" face=\"Courier\">'
         for x in self.tokens:
             if x.tipo == self.tipos.ERROR:
                 self.reporteHTML_errores += '<tr><td align=center>'+ font + x.get_lexema() + '</td><td align=center>'+ font + str(x.get_fila()) + '</td><td align=center>'+ font + str(x.get_columna()) + '</td></tr>'
-                print(x.get_lexema()," --> ",x.get_fila(), ' --> ',x.get_columna(),'--> Error Lexico')                                      
+                #print(x.get_lexema()," --> ",x.get_fila(), ' --> ',x.get_columna(),'--> Error Lexico')                                      
      
     def crear_reporte_token(self):
+        self.obtener_tokens()
         try: 
             file = open('Reporte_Tokens.html','w')
             head = '<head><title>Reporte Token</title></head>\n'
-            body = "<body bgcolor=\"#B6F49D\">"
-            body += "<table width=\"600\" bgcolor=#B6F49D align=left> <tr> <td><font color=\"black\" FACE=\"Courier\">" 
-            body += "<p align=\"left\">Arnoldo Luis Antonio González Camey &nbsp;—&nbsp; Carné: 201701548</p></font>"
-            body += "</td> </tr></table></br></br>"
-            body += ''' <h2 align=\"center\"><font color=\"black\" FACE=\"Courier\">Reporte de Tokens</h2>
+            body = '''<body bgcolor=\"#B6F49D\">
+                    <table width=\"400\" bgcolor=#B6F49D align=left> <tr> <td><font color=\"black\" FACE=\"Courier\">
+                    <p align=\"left\">Arnoldo Luis Antonio González Camey &nbsp;—&nbsp; Carné: 201701548</p></font>
+                    </td> </tr></table></br></br>
+                    <h2 align=\"center\"><font color=\"black\" FACE=\"Courier\">Reporte de Tokens</h2>
                     <table width=\"1000\" bgcolor=#CDF9BA align=center style="border:5px dashed brown">
                     <tr>
                         <td align=center><font color=\"#000000\" face=\"Courier\"><strong>Token</strong></td>
                         <td align=center><font color=\"#000000\" face=\"Courier\"><strong>Lexema</strong></td>
                         <td align=center><font color=\"#000000\" face=\"Courier\"><strong>Fila</strong></td>                                            
                         <td align=center><font color=\"#000000\" face=\"Courier\"><strong>Columna</strong></td>
-                    </tr>''' 
+                    </tr>'''
             body += self.reporteHTML_token +'</table></body>'
             html = '<html>\n' + head + body + '</html>'
             file.write(html)
@@ -328,26 +321,27 @@ class Analizador():
             webbrowser.open_new_tab('Reporte_Tokens.html')
         
     def crear_reporte_errores(self):
+        self.obtener_errores_lexico()
         try: 
-            file = open('Reporte_Errores.html','w')
+            file = open('Reporte_Errores_Lexico.html','w')
             head = '<head><title>Reporte Errores</title></head>\n'
-            body = "<body bgcolor=\"#B6F49D\">"
-            body += "<table width=\"600\" bgcolor=#B6F49D align=left> <tr> <td><font color=\"black\" FACE=\"Courier\">" 
-            body += "<p align=\"left\">Arnoldo Luis Antonio González Camey &nbsp;—&nbsp; Carné: 201701548</p></font>"
-            body += "</td> </tr></table></br></br>"
-            body += ''' <h2 align=\"center\"><font color=\"black\" FACE=\"Courier\">Reporte de Errores</h2>
+            body = '''<body bgcolor=\"#B6F49D\">
+                    <table width=\"600\" bgcolor=#B6F49D align=left> <tr> <td><font color=\"black\" FACE=\"Courier\">
+                    <p align=\"left\">Arnoldo Luis Antonio González Camey &nbsp;—&nbsp; Carné: 201701548</p></font>
+                    </td> </tr></table></br></br>
+                    <h2 align=\"center\"><font color=\"black\" FACE=\"Courier\">Reporte de Errores Léxicos</h2>
                     <table width=\"800\" bgcolor=#CDF9BA align=center style="border:5px dashed brown">
                     <tr>
                         <td align=center><font color=\"#000000\" face=\"Courier\"><strong>Caracter</strong></td>
                         <td align=center><font color=\"#000000\" face=\"Courier\"><strong>Fila</strong></td>                                            
                         <td align=center><font color=\"#000000\" face=\"Courier\"><strong>Columna</strong></td>
-                    </tr>''' 
+                    </tr>'''
             body += self.reporteHTML_errores +'</table></body>'
             html = '<html>\n' + head + body + '</html>'
             file.write(html)
-            print('Reporte de Errores generado exitosamente')
+            print('Reporte de Errores Léxicos generado exitosamente')
         except OSError:
-            print("Error al crear el Reporte de Errores")
+            print("Error al crear el Reporte de Errores Léxicos")
         finally:         
             file.close()
-            webbrowser.open_new_tab('Reporte_Errores.html')
+            webbrowser.open_new_tab('Reporte_Errores_Lexico.html')
