@@ -66,23 +66,66 @@ class Interfaz():
         
         self.sintactico = Sintactico(tkinter, self.lexico.tokens, self.txt_consola)
         self.txt_consola.configure(state = 'disabled')
+        self.sintactico.opciones_reporte_arbol(self.combo_reportes)        
         self.lexico.obtener_tokens()      
         self.sintactico.reniciar()
     
     def configuracion_combo(self, toolbar):    
         self.combo_reportes = ttk.Combobox(toolbar, font = ('Courier', 9), width = 25,  state = "readonly")
-        self.combo_reportes["values"] = ["Seleccione el Reporte", "Reporte Tokens", "Reporte Errores Léxicos", "Reporte Error Sintáctico"]
+        self.combo_reportes["values"] = ["Seleccione el Reporte", "Reporte Tokens", "Reporte Errores Léxico", "Reporte Error Sintáctico"]
         self.combo_reportes.current(0)
         self.combo_reportes.pack(side = RIGHT, padx = 3, pady = 2) 
         
     def crear_reportes(self):
         indice = self.combo_reportes.current()
+        nombre = self.combo_reportes.get()
         if indice == 1:
             self.lexico.crear_reporte_token()
         elif indice == 2:
             self.lexico.crear_reporte_errores()
         elif indice == 3:
             self.sintactico.crear_reporte_errores_sintactico()
+        elif nombre == 'Arbol Inicio':
+            pass
+        
+        elif nombre == 'Arbol Claves':
+            pass
+        
+        elif nombre == 'Arbol Registros':
+            pass
+        
+        elif nombre == 'Arbol Imprimir':
+            self.sintactico.arboles.generar_graphviz_arbol('Imprimir',self.sintactico.arboles.arbol_imprimir())
+        
+        elif nombre == 'Arbol ImprimirLn':
+            self.sintactico.arboles.generar_graphviz_arbol('ImprimirLn',self.sintactico.arboles.arbol_imprimirln())
+        
+        elif nombre == 'Arbol Comentario Linea':
+            self.sintactico.arboles.generar_graphviz_arbol('Comentario_Linea',self.sintactico.arboles.arbol_comentario_linea())
+        
+        elif nombre == 'Arbol Comentario MultiLinea':
+            self.sintactico.arboles.generar_graphviz_arbol('Comentario_MultiLinea',self.sintactico.arboles.arbol_comentario_multilinea())
+        
+        elif nombre == 'Arbol Conteo':
+            self.sintactico.arboles.generar_graphviz_arbol('Conteo',self.sintactico.arboles.arbol_conteo())
+        
+        elif nombre == 'Arbol Promedio':
+            self.sintactico.arboles.generar_graphviz_arbol('Promedio',self.sintactico.arboles.arbol_promedio())
+        
+        elif nombre == 'Arbol Datos':
+            self.sintactico.arboles.generar_graphviz_arbol('Datos',self.sintactico.arboles.arbol_datos())
+        
+        elif nombre == 'Arbol Sumar':
+            self.sintactico.arboles.generar_graphviz_arbol('Sumar',self.sintactico.arboles.arbol_sumar())
+        
+        elif nombre == 'Arbol Max':
+            self.sintactico.arboles.generar_graphviz_arbol('Max',self.sintactico.arboles.arbol_max())
+        
+        elif nombre == 'Arbol Min':
+            self.sintactico.arboles.generar_graphviz_arbol('Min',self.sintactico.arboles.arbol_min())
+        
+        elif nombre == 'Arbol Exportar Reporte':
+            self.sintactico.arboles.generar_graphviz_arbol('Exportar_Reporte',self.sintactico.arboles.arbol_exportar_reporte())
         
     def leer_archivo(self):
         try:

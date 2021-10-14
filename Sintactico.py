@@ -2,9 +2,12 @@ from Token import Token
 from Registro import Registro
 from Clave import Clave
 import webbrowser
+from Arboles import Arboles
+from os import makedirs
 
 class Sintactico:
     
+    arboles = Arboles()
     tipos = Token('',-1,-1,-1)
     preanalisis = Token.ERROR
     posicion = 0
@@ -20,8 +23,7 @@ class Sintactico:
     registros = Registro(-1)
     reporteHTML_registro = ''
     reporte_error_sintac = ''
-    fila = 1
-    columna = 1
+    nombres_arboles = []
 
     def __init__(self, tkinter, lista, txt_consola):
         self.errorSintactico = False
@@ -104,6 +106,8 @@ class Sintactico:
         self.Match(Token.CORCHETE_IZQUIERDO)
         self.Cuerpo_Claves()
         self.Match(Token.CORCHETE_DERECHO)
+        if not self.repetido('Arbol Claves'):
+            self.nombres_arboles.append('Arbol Claves')
 
     def Cuerpo_Claves(self):
         if Token.CADENA == self.preanalisis:
@@ -123,6 +127,8 @@ class Sintactico:
         self.Match(Token.CORCHETE_IZQUIERDO)
         self.Bloque_Registros()
         self.Match(Token.CORCHETE_DERECHO)
+        if not self.repetido('Arbol Registros'):
+            self.nombres_arboles.append('Arbol Registros')
         
     def Bloque_Registros(self):
         if Token.LLAVE_IZQUIERDA == self.preanalisis:
@@ -164,9 +170,13 @@ class Sintactico:
     
     def Comentario(self):
         self.Match(Token.COMENTARIO_LINEA)
+        if not self.repetido('Arbol Comentario Linea'):
+            self.nombres_arboles.append('Arbol Comentario Linea')
     
     def Comentario_Multilinea(self):
         self.Match(Token.COMENTARIO_MULTILINEA)
+        if not self.repetido('Arbol Comentario MultiLinea'):
+            self.nombres_arboles.append('Arbol Comentario MultiLinea')
         
     def Imprimir(self):
         self.Match(Token.IMPRIMIR)
@@ -174,10 +184,12 @@ class Sintactico:
         print_consola = self.lista[self.posicion].lexema_valido
         self.Match(Token.CADENA)
         self.Match(Token.PARENTESIS_DERECHO)
-        self.Match(Token.PUNTO_Y_COMA) 
+        self.Match(Token.PUNTO_Y_COMA)         
         
         print_consola = print_consola.replace('"','')
         self.txt_consola.insert(self.tkinter.INSERT, print_consola)
+        if not self.repetido('Arbol Imprimir'):
+            self.nombres_arboles.append('Arbol Imprimir')
         
     def ImprimirLn(self):
         self.Match(Token.IMPRIMIRLN)
@@ -188,7 +200,9 @@ class Sintactico:
         self.Match(Token.PUNTO_Y_COMA) 
         
         print_consola = print_consola.replace('"','')
-        self.txt_consola.insert(self.tkinter.INSERT, '\n' + print_consola + '\n')  
+        self.txt_consola.insert(self.tkinter.INSERT, '\n' + print_consola + '\n') 
+        if not self.repetido('Arbol ImprimirLn'):
+            self.nombres_arboles.append('Arbol ImprimirLn') 
         
     def Conteo(self):
         self.Match(Token.CONTEO)
@@ -198,7 +212,9 @@ class Sintactico:
         
         print_consola = len(self.registros.valores)
         self.txt_consola.insert(self.tkinter.INSERT, '>>> ' + str(print_consola))  
-    
+        if not self.repetido('Arbol Conteo'):
+            self.nombres_arboles.append('Arbol Conteo')
+
     def Promedio(self):
         self.Match(Token.PROMEDIO)
         self.Match(Token.PARENTESIS_IZQUIERDO)
@@ -208,6 +224,8 @@ class Sintactico:
         self.Match(Token.PUNTO_Y_COMA) 
         campo = campo.replace('"','')
         self.obtener_promedio_suma(campo, True)
+        if not self.repetido('Arbol Promedio'):
+            self.nombres_arboles.append('Arbol Promedio')
     
     def obtener_promedio_suma(self, campo, es_promedio):
         indice = -1
@@ -230,13 +248,31 @@ class Sintactico:
         self.Match(Token.PARENTESIS_IZQUIERDO)
         campo = self.lista[self.posicion].lexema_valido
         self.Match(Token.CADENA)
-        self.Match(Token.COMA) 
-        valor = self.lista[self.posicion].lexema_valido    
-        self.Match(Token.NUMERO)
+        self.Match(Token.COMA)   
+        valor = self.valor_contarSi()
         self.Match(Token.PARENTESIS_DERECHO)     
         self.Match(Token.PUNTO_Y_COMA)  
         campo = campo.replace('"','')        
         self.obtener_contar_si(campo, valor)
+        if not self.repetido('Arbol ContarSi'):
+            self.nombres_arboles.append('Arbol ContarSi')
+    
+    def valor_contarSi(self):
+        if Token.NUMERO == self.preanalisis:
+            valor = self.lista[self.posicion].lexema_valido
+            valor = int(valor)
+            self.Match(Token.NUMERO)
+            return valor  
+        elif Token.DECIMAL == self.preanalisis:
+            valor = self.lista[self.posicion].lexema_valido
+            valor = float(valor)
+            self.Match(Token.DECIMAL)
+            return valor  
+        elif Token.CADENA == self.preanalisis:
+            dato: str = self.lista[self.posicion].lexema_valido
+            dato = dato.replace('"',"")
+            self.Match(Token.CADENA)
+            return dato                        
         
     def obtener_contar_si(self, campo, valor):
         indice = -1
@@ -247,8 +283,15 @@ class Sintactico:
                 break
         if indice != -1:
             for i in range(len(self.registros.valores)):
-                if int(valor) == int(self.registros.valores[i].args[0][indice]):
-                    contador += 1
+                if type(valor) == float:
+                    if valor == float(self.registros.valores[i].args[0][indice]):
+                        contador += 1
+                elif type(valor) == int:  
+                    if valor == int(self.registros.valores[i].args[0][indice]):
+                        contador += 1
+                elif type(valor) == str:  
+                    if valor.replace(" ","").upper() == self.registros.valores[i].args[0][indice].replace(" ","").upper():
+                        contador += 1              
             self.txt_consola.insert(self.tkinter.INSERT, '>>> ' + str(contador)+'\n')   
     
     def Datos(self):
@@ -256,7 +299,9 @@ class Sintactico:
         self.Match(Token.PARENTESIS_IZQUIERDO)
         self.Match(Token.PARENTESIS_DERECHO)     
         self.Match(Token.PUNTO_Y_COMA)   
-        self.obtener_datos(False)            
+        self.obtener_datos(False)  
+        if not self.repetido('Arbol Datos'):
+            self.nombres_arboles.append('Arbol Datos')          
     
     def obtener_datos(self, es_reporte):
         self.reporteHTML_registro += '<tr>'
@@ -277,7 +322,6 @@ class Sintactico:
             for claves in self.valores_clave:
                 contenido += self.registros.valores[i].args[0][claves.get_indice()]
                 self.reporteHTML_registro += '<td align=center><font color=\"#000000\" face=\"Courier\">'+self.registros.valores[i].args[0][claves.get_indice()]+'</td>'
-
                 contador += 1
                 if contador != len(self.valores_clave):
                     contenido += ' - '
@@ -299,6 +343,8 @@ class Sintactico:
         self.Match(Token.PUNTO_Y_COMA)  
         campo = campo.replace('"','')
         self.obtener_promedio_suma(campo, False)
+        if not self.repetido('Arbol Sumar'):
+            self.nombres_arboles.append('Arbol Sumar')
     
     def Max(self):
         self.Match(Token.MAX)
@@ -309,7 +355,9 @@ class Sintactico:
         self.Match(Token.PUNTO_Y_COMA)  
         campo = campo.replace('"','')
         self.obtener_max_min(campo, True)
-    
+        if not self.repetido('Arbol Max'):
+            self.nombres_arboles.append('Arbol Max')
+        
     def obtener_max_min(self, campo, es_max):
         indice = -1
         maximo = 0
@@ -339,7 +387,9 @@ class Sintactico:
         self.Match(Token.PARENTESIS_DERECHO)     
         self.Match(Token.PUNTO_Y_COMA)  
         campo = campo.replace('"','') 
-        self.obtener_max_min(campo, False)   
+        self.obtener_max_min(campo, False)  
+        if not self.repetido('Arbol Min'):
+            self.nombres_arboles.append('Arbol Min') 
         
     def Exportar_Reporte(self):
         self.Match(Token.EXPORTARREPORTE)
@@ -350,17 +400,34 @@ class Sintactico:
         self.Match(Token.PUNTO_Y_COMA)   
         nombre = nombre.replace('"','')    
         self.crear_reporte_registro(nombre)
+        if not self.repetido('Arbol Exportar Reporte'):
+            self.nombres_arboles.append('Arbol Exportar Reporte')
     
     def reniciar(self):
         self.lista.clear()
         self.valores_registro.clear()
         self.registros.reiniciar_registro()
         self.valores_clave.clear()
+        self.nombres_arboles.clear()
+    
+    def opciones_reporte_arbol(self, combo_reportes):        
+        combo_reportes["values"] = ["Seleccione el Reporte", "Reporte Tokens", "Reporte Errores Léxico", "Reporte Error Sintáctico"]        
+        values = list(combo_reportes["values"])   
+        combo_reportes["values"] = values + self.nombres_arboles
+        for i in self.nombres_arboles:
+            print(i)
+    
+    def repetido(self, nombre_entrada):
+        for nombres in self.nombres_arboles:
+            if nombres == nombre_entrada:
+                return True
+        return False
     
     def crear_reporte_registro(self, nombre):
+        makedirs('Reportes', exist_ok = True)
         self.obtener_datos(True)
         try: 
-            file = open(nombre + '.html','w')
+            file = open('Reportes/' + nombre + '.html','w')
             head = '<head><title>Reporte Registro</title></head>\n'
             body = '''<body bgcolor=\"#B6F49D\">
                     <table width=\"600\" bgcolor=#B6F49D align=left> <tr> <td><font color=\"black\" FACE=\"Courier\">
@@ -376,17 +443,18 @@ class Sintactico:
             print("Error al crear el Reporte de Registro")
         finally:         
             file.close()
-            webbrowser.open_new_tab(nombre + '.html')        
+            webbrowser.open_new_tab('Reportes\\' + nombre + '.html')        
     
     def crear_reporte_errores_sintactico(self):
+        makedirs('Reportes', exist_ok = True)
         try: 
-            file = open('Reporte_Errores_Sintactico.html','w')
-            head = '<head><title>Reporte Registro</title></head>\n'
+            file = open('Reportes/Reporte_Errores_Sintactico.html','w')
+            head = '<head><title>Reporte Errores Sintácticos</title></head>\n'
             body = '''<body bgcolor=\"#B6F49D\">
                     <table width=\"600\" bgcolor=#B6F49D align=left> <tr> <td><font color=\"black\" FACE=\"Courier\">
                     <p align=\"left\">Arnoldo Luis Antonio González Camey &nbsp;—&nbsp; Carné: 201701548</p></font>
                     </td> </tr></table></br></br>
-                    <h2 align=\"center\"><font color=\"black\" FACE=\"Courier\">Reporte Errores Sintáctico</h2>
+                    <h2 align=\"center\"><font color=\"black\" FACE=\"Courier\">Tabla Errores Sintáctico</h2>
                     <table width=\"1250\" bgcolor=#CDF9BA align=center style="border:5px dashed brown">
                     <tr>
                         <td align=center><font color=\"#000000\" face=\"Courier\"><strong>Error Lexema</strong></td>
@@ -402,7 +470,7 @@ class Sintactico:
             print("Error al crear el Reporte de errores sintácticos")
         finally:         
             file.close()
-            webbrowser.open_new_tab('Reporte_Errores_Sintactico.html')
+            webbrowser.open_new_tab('Reportes\Reporte_Errores_Sintactico.html')
     
     def Repetir(self):
         if Token.CLAVES == self.preanalisis:
@@ -447,3 +515,6 @@ class Sintactico:
         elif Token.EXPORTARREPORTE == self.preanalisis:
             self.Exportar_Reporte()
             self.Repetir()
+        else:
+            if not self.repetido('Arbol Inicio'):
+                self.nombres_arboles.append('Arbol Inicio')

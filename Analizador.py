@@ -1,6 +1,7 @@
 from Token import Token
 import re
 import webbrowser
+from os import makedirs
 
 class Analizador():
     
@@ -27,7 +28,6 @@ class Analizador():
         self.columna = 1
         entrada = self.separar(entrada)
         entrada += '`'
-        #print(entrada)
         actual = ''
         longitud = len(entrada)
         for contador in range(longitud):
@@ -295,14 +295,15 @@ class Analizador():
      
     def crear_reporte_token(self):
         self.obtener_tokens()
+        makedirs('Reportes', exist_ok = True)
         try: 
-            file = open('Reporte_Tokens.html','w')
+            file = open('Reportes/Reporte_Tokens.html','w')
             head = '<head><title>Reporte Token</title></head>\n'
             body = '''<body bgcolor=\"#B6F49D\">
                     <table width=\"400\" bgcolor=#B6F49D align=left> <tr> <td><font color=\"black\" FACE=\"Courier\">
                     <p align=\"left\">Arnoldo Luis Antonio González Camey &nbsp;—&nbsp; Carné: 201701548</p></font>
                     </td> </tr></table></br></br>
-                    <h2 align=\"center\"><font color=\"black\" FACE=\"Courier\">Reporte de Tokens</h2>
+                    <h2 align=\"center\"><font color=\"black\" FACE=\"Courier\">Tabla de Tokens</h2>
                     <table width=\"1000\" bgcolor=#CDF9BA align=center style="border:5px dashed brown">
                     <tr>
                         <td align=center><font color=\"#000000\" face=\"Courier\"><strong>Token</strong></td>
@@ -318,18 +319,19 @@ class Analizador():
             print("Error al crear el Reporte de Tokens")
         finally:         
             file.close()
-            webbrowser.open_new_tab('Reporte_Tokens.html')
+            webbrowser.open_new_tab('Reportes\Reporte_Tokens.html')
         
     def crear_reporte_errores(self):
         self.obtener_errores_lexico()
+        makedirs('Reportes', exist_ok = True)
         try: 
-            file = open('Reporte_Errores_Lexico.html','w')
+            file = open('Reportes/Reporte_Errores_Lexico.html','w')
             head = '<head><title>Reporte Errores</title></head>\n'
             body = '''<body bgcolor=\"#B6F49D\">
                     <table width=\"600\" bgcolor=#B6F49D align=left> <tr> <td><font color=\"black\" FACE=\"Courier\">
                     <p align=\"left\">Arnoldo Luis Antonio González Camey &nbsp;—&nbsp; Carné: 201701548</p></font>
                     </td> </tr></table></br></br>
-                    <h2 align=\"center\"><font color=\"black\" FACE=\"Courier\">Reporte de Errores Léxicos</h2>
+                    <h2 align=\"center\"><font color=\"black\" FACE=\"Courier\">Tabla de Errores Léxicos</h2>
                     <table width=\"800\" bgcolor=#CDF9BA align=center style="border:5px dashed brown">
                     <tr>
                         <td align=center><font color=\"#000000\" face=\"Courier\"><strong>Caracter</strong></td>
@@ -344,4 +346,4 @@ class Analizador():
             print("Error al crear el Reporte de Errores Léxicos")
         finally:         
             file.close()
-            webbrowser.open_new_tab('Reporte_Errores_Lexico.html')
+            webbrowser.open_new_tab('Reportes\Reporte_Errores_Lexico.html')

@@ -7,5 +7,4 @@ class Clave():
         return self.nombre
     
     def get_indice(self):
-        return self.indice    
-        
+        return self.indice
