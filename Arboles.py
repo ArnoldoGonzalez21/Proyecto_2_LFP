@@ -136,14 +136,14 @@ class Arboles():
         \r\t\traiz -> n5;'''
         return contenido
     
-    def generar_graphviz_arbol(self, nombre_token, contenido):
+    def generar_graphviz_arbol(self, nombre_token, contenido, nombre_raiz):
         inicio_graphviz = '''
         \rdigraph L {
         \r\tnode[shape = box fillcolor = "#FFFF00" style = filled]
         \r\tsubgraph cluster_p {
         \r\t\tlabel = "Arbol Derivacion - '''+ nombre_token.replace("_", " ") +''' "
         \r\t\tbgcolor = "#6BD6E9"
-        \r\t\traiz[label = "<'''+nombre_token.upper()+'''>"]'''
+        \r\t\t'''+nombre_raiz+'''[label = "<'''+nombre_token.upper()+'''>"]'''
         final_graphviz = '\n\t}\n}'
         graphviz = inicio_graphviz + contenido + final_graphviz
         makedirs('Reportes', exist_ok = True)
@@ -153,4 +153,3 @@ class Arboles():
         system('dot -Tpng ' +'Reportes/'+nombre_token+'.dot -o '+'Reportes/'+nombre_token+'.png')
         system('cd ./'+'Reportes/'+nombre_token+'.png')
         startfile('Reportes\\'+nombre_token+'.png')
-          

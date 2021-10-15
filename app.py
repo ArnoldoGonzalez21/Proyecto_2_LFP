@@ -8,7 +8,7 @@ WIDTH = 1025
 HEIGHT = 550
 
 class Interfaz():
-    nombre = ''
+    
     lexico = Analizador()
     ventana = tkinter.Tk()     
     
@@ -56,7 +56,7 @@ class Interfaz():
         scrollbar_consola = ttk.Scrollbar(self.ventana, orient = "vertical", command = self.txt_consola.yview)
         scrollbar_consola.place(x = 975, y = 100, height = 420) 
         self.txt_consola.configure(yscrollcommand = scrollbar_consola.set)
-        
+    
     def analizar_archivo(self):
         self.txt_consola.configure(state = 'normal')
         self.txt_consola.delete('1.0', END)  
@@ -86,46 +86,49 @@ class Interfaz():
         elif indice == 3:
             self.sintactico.crear_reporte_errores_sintactico()
         elif nombre == 'Arbol Inicio':
-            pass
+            self.sintactico.arboles.generar_graphviz_arbol('Inicio',self.sintactico.arbol_inicio(), 'n0')
         
         elif nombre == 'Arbol Claves':
-            pass
+            self.sintactico.arboles.generar_graphviz_arbol('Claves',self.sintactico.arbol_claves(), 'raiz')
         
         elif nombre == 'Arbol Registros':
-            pass
+            self.sintactico.arboles.generar_graphviz_arbol('Registros',self.sintactico.arbol_registros(), 'raiz')
+        
+        elif nombre == 'Arbol ContarSi':
+            self.sintactico.arboles.generar_graphviz_arbol('ContarSi',self.sintactico.arbol_contarsi(), 'raiz')
         
         elif nombre == 'Arbol Imprimir':
-            self.sintactico.arboles.generar_graphviz_arbol('Imprimir',self.sintactico.arboles.arbol_imprimir())
+            self.sintactico.arboles.generar_graphviz_arbol('Imprimir',self.sintactico.arboles.arbol_imprimir(), 'raiz')
         
         elif nombre == 'Arbol ImprimirLn':
-            self.sintactico.arboles.generar_graphviz_arbol('ImprimirLn',self.sintactico.arboles.arbol_imprimirln())
+            self.sintactico.arboles.generar_graphviz_arbol('ImprimirLn',self.sintactico.arboles.arbol_imprimirln(), 'raiz')
         
         elif nombre == 'Arbol Comentario Linea':
-            self.sintactico.arboles.generar_graphviz_arbol('Comentario_Linea',self.sintactico.arboles.arbol_comentario_linea())
+            self.sintactico.arboles.generar_graphviz_arbol('Comentario_Linea',self.sintactico.arboles.arbol_comentario_linea(), 'raiz')
         
         elif nombre == 'Arbol Comentario MultiLinea':
-            self.sintactico.arboles.generar_graphviz_arbol('Comentario_MultiLinea',self.sintactico.arboles.arbol_comentario_multilinea())
+            self.sintactico.arboles.generar_graphviz_arbol('Comentario_MultiLinea',self.sintactico.arboles.arbol_comentario_multilinea(), 'raiz')
         
         elif nombre == 'Arbol Conteo':
-            self.sintactico.arboles.generar_graphviz_arbol('Conteo',self.sintactico.arboles.arbol_conteo())
+            self.sintactico.arboles.generar_graphviz_arbol('Conteo',self.sintactico.arboles.arbol_conteo(), 'raiz')
         
         elif nombre == 'Arbol Promedio':
-            self.sintactico.arboles.generar_graphviz_arbol('Promedio',self.sintactico.arboles.arbol_promedio())
+            self.sintactico.arboles.generar_graphviz_arbol('Promedio',self.sintactico.arboles.arbol_promedio(), 'raiz')
         
         elif nombre == 'Arbol Datos':
-            self.sintactico.arboles.generar_graphviz_arbol('Datos',self.sintactico.arboles.arbol_datos())
+            self.sintactico.arboles.generar_graphviz_arbol('Datos',self.sintactico.arboles.arbol_datos(), 'raiz')
         
         elif nombre == 'Arbol Sumar':
-            self.sintactico.arboles.generar_graphviz_arbol('Sumar',self.sintactico.arboles.arbol_sumar())
+            self.sintactico.arboles.generar_graphviz_arbol('Sumar',self.sintactico.arboles.arbol_sumar(), 'raiz')
         
         elif nombre == 'Arbol Max':
-            self.sintactico.arboles.generar_graphviz_arbol('Max',self.sintactico.arboles.arbol_max())
+            self.sintactico.arboles.generar_graphviz_arbol('Max',self.sintactico.arboles.arbol_max(), 'raiz')
         
         elif nombre == 'Arbol Min':
-            self.sintactico.arboles.generar_graphviz_arbol('Min',self.sintactico.arboles.arbol_min())
+            self.sintactico.arboles.generar_graphviz_arbol('Min',self.sintactico.arboles.arbol_min(), 'raiz')
         
         elif nombre == 'Arbol Exportar Reporte':
-            self.sintactico.arboles.generar_graphviz_arbol('Exportar_Reporte',self.sintactico.arboles.arbol_exportar_reporte())
+            self.sintactico.arboles.generar_graphviz_arbol('Exportar_Reporte',self.sintactico.arboles.arbol_exportar_reporte(), 'raiz')
         
     def leer_archivo(self):
         try:

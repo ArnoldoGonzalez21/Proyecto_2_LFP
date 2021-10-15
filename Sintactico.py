@@ -55,57 +55,113 @@ class Sintactico:
         nombre_Tk = self.tipos.get_tipo_token_sintactico(tipo)
         return nombre_Tk
     
+    contenido_inicio = ''        
+    contador_inicio = 1
+    
     def Inicio(self):
         print('Inicio del analisis Sintáctico')
         if Token.CLAVES == self.preanalisis:
+            self.contenido_inicio += 'n'+str(self.contador_inicio)+'[label = "<CLAVES>"];\n'
+            self.contenido_inicio += 'n0 -> n'+str(self.contador_inicio)+';\n'       
+            self.contador_inicio += 1
             self.Claves()
             self.Repetir()
-        elif Token.REGISTROS == self.preanalisis:
+        elif Token.REGISTROS == self.preanalisis:         
+            self.contenido_inicio += 'n'+str(self.contador_inicio)+'[label = "<REGISTROS>"];\n'
+            self.contenido_inicio += 'n0 -> n'+str(self.contador_inicio)+';\n'       
+            self.contador_inicio += 1
             self.Registros()
             self.Repetir()
-        elif Token.COMENTARIO_LINEA == self.preanalisis:
+        elif Token.COMENTARIO_LINEA == self.preanalisis:      
+            self.contenido_inicio += 'n'+str(self.contador_inicio)+'[label = "<COMENTARIO_LINEA>"];\n'
+            self.contenido_inicio += 'n0 -> n'+str(self.contador_inicio)+';\n'       
+            self.contador_inicio += 1
             self.Comentario()
             self.Repetir()    
-        elif Token.COMENTARIO_MULTILINEA == self.preanalisis:
+        elif Token.COMENTARIO_MULTILINEA == self.preanalisis:           
+            self.contenido_inicio += 'n'+str(self.contador_inicio)+'[label = "<COMENTARIO_MULTILINEA>"];\n'
+            self.contenido_inicio += 'n0 -> n'+str(self.contador_inicio)+';\n'       
+            self.contador_inicio += 1
             self.Comentario_Multilinea()
             self.Repetir()     
-        elif Token.IMPRIMIR == self.preanalisis:
+        elif Token.IMPRIMIR == self.preanalisis:           
+            self.contenido_inicio += 'n'+str(self.contador_inicio)+'[label = "<IMPRIMIR>"];\n'
+            self.contenido_inicio += 'n0 -> n'+str(self.contador_inicio)+';\n'       
+            self.contador_inicio += 1
             self.Imprimir()
             self.Repetir()
-        elif Token.IMPRIMIRLN == self.preanalisis:
+        elif Token.IMPRIMIRLN == self.preanalisis:     
+            self.contenido_inicio += 'n'+str(self.contador_inicio)+'[label = "<IMPRIMIRLN>"];\n'
+            self.contenido_inicio += 'n0 -> n'+str(self.contador_inicio)+';\n'       
+            self.contador_inicio += 1
             self.ImprimirLn()
             self.Repetir()
-        elif Token.CONTEO == self.preanalisis:
+        elif Token.CONTEO == self.preanalisis:         
+            self.contenido_inicio += 'n'+str(self.contador_inicio)+'[label = "<CONTEO>"];\n'
+            self.contenido_inicio += 'n0 -> n'+str(self.contador_inicio)+';\n'   
+            self.contador_inicio += 1
             self.Conteo()
             self.Repetir()
-        elif Token.PROMEDIO == self.preanalisis:
+        elif Token.PROMEDIO == self.preanalisis:       
+            self.contenido_inicio += 'n'+str(self.contador_inicio)+'[label = "<PROMEDIO>"];\n'
+            self.contenido_inicio += 'n0 -> n'+str(self.contador_inicio)+';\n'    
+            self.contador_inicio += 1
             self.Promedio()
             self.Repetir()
-        elif Token.CONTARSI == self.preanalisis:
+        elif Token.CONTARSI == self.preanalisis:           
+            self.contenido_inicio += 'n'+str(self.contador_inicio)+'[label = "<CONTARSI>"];\n'
+            self.contenido_inicio += 'n0 -> n'+str(self.contador_inicio)+';\n' 
+            self.contador_inicio += 1
             self.ContarSi()
             self.Repetir()
-        elif Token.DATOS == self.preanalisis:
+        elif Token.DATOS == self.preanalisis:        
+            self.contenido_inicio += 'n'+str(self.contador_inicio)+'[label = "<DATOS>"];\n'
+            self.contenido_inicio += 'n0 -> n'+str(self.contador_inicio)+';\n'    
+            self.contador_inicio += 1
             self.Datos()
             self.Repetir()
-        elif Token.SUMAR == self.preanalisis:
+        elif Token.SUMAR == self.preanalisis:           
+            self.contenido_inicio += 'n'+str(self.contador_inicio)+'[label = "<SUMAR>"];\n'
+            self.contenido_inicio += 'n0 -> n'+str(self.contador_inicio)+';\n' 
+            self.contador_inicio += 1
             self.Sumar()
             self.Repetir()
-        elif Token.MAX == self.preanalisis:
+        elif Token.MAX == self.preanalisis:         
+            self.contenido_inicio += 'n'+str(self.contador_inicio)+'[label = "<MAX>"];\n'
+            self.contenido_inicio += 'n0 -> n'+str(self.contador_inicio)+';\n'  
+            self.contador_inicio += 1
             self.Max()
             self.Repetir()
-        elif Token.MIN == self.preanalisis:
+        elif Token.MIN == self.preanalisis:     
+            self.contenido_inicio += 'n'+str(self.contador_inicio)+'[label = "<MIN>"];\n'
+            self.contenido_inicio += 'n0 -> n'+str(self.contador_inicio)+';\n'      
+            self.contador_inicio += 1
             self.Min()
             self.Repetir()
-        elif Token.EXPORTARREPORTE == self.preanalisis:
+        elif Token.EXPORTARREPORTE == self.preanalisis:         
+            self.contenido_inicio += 'n'+str(self.contador_inicio)+'[label = "<EXPORTAR_REPORTE>"];\n'
+            self.contenido_inicio += 'n0 -> n'+str(self.contador_inicio)+';\n'   
+            self.contador_inicio += 1
             self.Exportar_Reporte()
             self.Repetir()
-            
+    
+    def arbol_inicio(self):
+        return self.contenido_inicio
+    
+    contenido_claves = ''        
+    contador_claves = 4
+           
     def Claves(self):
+        self.contenido_claves = ''        
+        self.contador_claves = 4
         self.Match(Token.CLAVES)
         self.Match(Token.IGUAL)
         self.Match(Token.CORCHETE_IZQUIERDO)
         self.Cuerpo_Claves()
+        self.contenido_claves += 'n'+str(self.contador_claves)+'[label = "Tk_Crch_Dr"];\n'
+        self.contenido_claves += 'raiz -> n'+str(self.contador_claves)+';'       
         self.Match(Token.CORCHETE_DERECHO)
+        
         if not self.repetido('Arbol Claves'):
             self.nombres_arboles.append('Arbol Claves')
 
@@ -116,30 +172,116 @@ class Sintactico:
             nuevo = Clave(self.indice_clave, nombre)
             self.valores_clave.append(nuevo)
             self.indice_clave += 1
+            
+            self.contenido_claves += 'n'+str(self.contador_claves)+'[label = "<BLOQUE_CLAVES>"];\n'
+            self.contenido_claves += 'n'+str(self.contador_claves)+' -> n'+str(self.contador_claves + 1)+';\n'
+            self.contador_claves += 1
+            self.contenido_claves += 'n'+str(self.contador_claves)+'[label = "Tk_Cadena"];\n'
+            self.contador_claves += 1
+            
             self.Match(Token.CADENA)
         if Token.COMA == self.preanalisis:
+            self.contenido_claves += 'n'+str(self.contador_claves)+'[label = "Tk_Coma"];\n'
+            self.contenido_claves += 'n'+str(self.contador_claves - 2)+' -> n'+str(self.contador_claves)+';\n'
+            self.contenido_claves += 'n'+str(self.contador_claves - 2)+' -> n'+str(self.contador_claves + 1)+';\n'
+            self.contador_claves += 1
             self.Match(Token.COMA)
-            self.Cuerpo_Claves()
-   
+            self.Cuerpo_Claves()   
+    
+    def arbol_claves(self):
+        contenido = '''
+        \r\t\tn1[label = "Tk_Claves"];
+        \r\t\tn2[label = "Tk_Igual"];
+        \r\t\tn3[label = "Tk_Crch_Iz"];  
+        \r\t\traiz -> n1;
+        \r\t\traiz -> n2;
+        \r\t\traiz -> n3;
+        \r\t\traiz -> n4;'''
+        contenido += self.contenido_claves
+        return contenido        
+    
+    contenido_registros = ''        
+    contador_registros = 4
+    
     def Registros(self):
+        self.contenido_registros = ''        
+        self.contador_registros = 4
         self.Match(Token.REGISTROS)
         self.Match(Token.IGUAL)
         self.Match(Token.CORCHETE_IZQUIERDO)
+        self.contenido_registros += 'n'+str(self.contador_registros)+'[label = "<BLOQUE_REGISTROS>"];\n'
+        self.contador_registros += 1
         self.Bloque_Registros()
+        self.contenido_registros += 'n'+str(self.contador_registros)+'[label = "Tk_Crch_Der"];\n'
+        self.contenido_registros += 'raiz -> n'+str(self.contador_registros)+';\n'
+        self.contador_registros += 1
         self.Match(Token.CORCHETE_DERECHO)
         if not self.repetido('Arbol Registros'):
             self.nombres_arboles.append('Arbol Registros')
         
     def Bloque_Registros(self):
         if Token.LLAVE_IZQUIERDA == self.preanalisis:
+            tmp = self.contador_registros
+            self.contenido_registros += 'n'+str(self.contador_registros)+'[label = "<CUERPO_REGISTROS>"];\n'
+            self.contenido_registros += 'n'+str(self.contador_registros - 1)+' -> n'+str(self.contador_registros)+';\n'
+            self.contador_registros += 1
             self.Cuerpo_Registros()
+            if Token.LLAVE_IZQUIERDA == self.preanalisis: #Creo que si
+                self.contenido_registros += 'n'+str(self.contador_registros)+'[label = "<BLOQUE_REGISTROS>"];\n'
+                self.contenido_registros += 'n'+str(tmp - 1)+' -> n'+str(self.contador_registros)+';\n'
+                self.contador_registros += 1
             self.Bloque_Registros()
     
     def Cuerpo_Registros(self):
+        tmp = self.contador_registros
         self.Match(Token.LLAVE_IZQUIERDA)
+        self.contenido_registros += 'n'+str(self.contador_registros)+'[label = "Tk_Llave_Izq"];\n'
+        self.contenido_registros += 'n'+str(self.contador_registros - 1)+' -> n'+str(self.contador_registros)+';\n'
+        self.contador_registros += 1
+        
+        self.contenido_registros += 'n'+str(self.contador_registros)+'[label = "<VALOR_REGISTROS>"];\n'
+        self.contenido_registros += 'n'+str(self.contador_registros - 2)+' -> n'+str(self.contador_registros)+';\n'
+        self.contador_registros += 1
+        
         self.valor_registro()
+        self.contenido_registros += 'n'+str(self.contador_registros)+'[label = "Tk_Llave_Der"];\n'
+        self.contenido_registros += 'n'+str(tmp - 1)+' -> n'+str(self.contador_registros)+';\n'
+        self.contador_registros += 1
         self.Match(Token.LLAVE_DERECHA)
         self.guardar_registro()
+              
+    def valor_registro(self):
+        if Token.NUMERO == self.preanalisis:
+            nuevo = self.lista[self.posicion].lexema_valido
+            self.valores_registro.append(nuevo)
+            self.contenido_registros += 'n'+str(self.contador_registros)+'[label = "Tk_Numero"];\n'
+            self.contenido_registros += 'n'+str(self.contador_registros - 1)+' -> n'+str(self.contador_registros)+';\n'
+            self.contador_registros += 1
+            self.Match(Token.NUMERO)
+        elif Token.CADENA == self.preanalisis:
+            nuevo = self.lista[self.posicion].lexema_valido
+            nuevo = nuevo.replace('"','')
+            self.valores_registro.append(nuevo)
+            self.contenido_registros += 'n'+str(self.contador_registros)+'[label = "Tk_Cadena"];\n'
+            self.contenido_registros += 'n'+str(self.contador_registros - 1)+' -> n'+str(self.contador_registros)+';\n'
+            self.contador_registros += 1
+            self.Match(Token.CADENA)    
+        elif Token.DECIMAL == self.preanalisis:
+            nuevo = self.lista[self.posicion].lexema_valido
+            self.valores_registro.append(nuevo)
+            self.contenido_registros += 'n'+str(self.contador_registros)+'[label = "Tk_Decimal"];\n'
+            self.contenido_registros += 'n'+str(self.contador_registros - 1)+' -> n'+str(self.contador_registros)+';\n'
+            self.contador_registros += 1
+            self.Match(Token.DECIMAL)
+        if Token.COMA == self.preanalisis:
+            self.contenido_registros += 'n'+str(self.contador_registros)+'[label = "Tk_Coma"];\n'
+            self.contenido_registros += 'n'+str(self.contador_registros - 2)+' -> n'+str(self.contador_registros)+';\n'
+            self.contador_registros += 1
+            self.contenido_registros += 'n'+str(self.contador_registros)+'[label = "<VALOR_REGISTROS>"];\n'
+            self.contenido_registros += 'n'+str(self.contador_registros - 3)+' -> n'+str(self.contador_registros)+';\n'
+            self.contador_registros += 1
+            self.Match(Token.COMA)
+            self.valor_registro()
     
     def guardar_registro(self):
         if not self.entro_reg:
@@ -149,24 +291,18 @@ class Sintactico:
         self.registros.agregar_registro(self.contador_registros, values)
         self.contador_registros += 1
         self.valor_actual += self.tamano_val_registros
-              
-    def valor_registro(self):
-        if Token.NUMERO == self.preanalisis:
-            nuevo = self.lista[self.posicion].lexema_valido
-            self.valores_registro.append(nuevo)
-            self.Match(Token.NUMERO)
-        elif Token.CADENA == self.preanalisis:
-            nuevo = self.lista[self.posicion].lexema_valido
-            nuevo = nuevo.replace('"','')
-            self.valores_registro.append(nuevo)
-            self.Match(Token.CADENA)    
-        elif Token.DECIMAL == self.preanalisis:
-            nuevo = self.lista[self.posicion].lexema_valido
-            self.valores_registro.append(nuevo)
-            self.Match(Token.DECIMAL)
-        if Token.COMA == self.preanalisis:
-            self.Match(Token.COMA)
-            self.valor_registro()
+    
+    def arbol_registros(self):
+        contenido = '''
+        \r\t\tn1[label = "Tk_Registros"];
+        \r\t\tn2[label = "Tk_Igual"];
+        \r\t\tn3[label = "Tk_Crch_Izq"]; 
+        \r\t\traiz -> n1;
+        \r\t\traiz -> n2;
+        \r\t\traiz -> n3;
+        \r\t\traiz -> n4;'''
+        contenido += self.contenido_registros
+        return contenido
     
     def Comentario(self):
         self.Match(Token.COMENTARIO_LINEA)
@@ -261,16 +397,19 @@ class Sintactico:
         if Token.NUMERO == self.preanalisis:
             valor = self.lista[self.posicion].lexema_valido
             valor = int(valor)
+            self.valor_contarsi = valor
             self.Match(Token.NUMERO)
             return valor  
         elif Token.DECIMAL == self.preanalisis:
             valor = self.lista[self.posicion].lexema_valido
             valor = float(valor)
+            self.valor_contarsi = valor
             self.Match(Token.DECIMAL)
             return valor  
         elif Token.CADENA == self.preanalisis:
             dato: str = self.lista[self.posicion].lexema_valido
             dato = dato.replace('"',"")
+            self.valor_contarsi = dato
             self.Match(Token.CADENA)
             return dato                        
         
@@ -293,6 +432,35 @@ class Sintactico:
                     if valor.replace(" ","").upper() == self.registros.valores[i].args[0][indice].replace(" ","").upper():
                         contador += 1              
             self.txt_consola.insert(self.tkinter.INSERT, '>>> ' + str(contador)+'\n')   
+    
+    valor_contarsi = ''
+    
+    def arbol_contarsi(self):
+        tipo = ''
+        if type(self.valor_contarsi) == float:
+            tipo = 'Tk_Decimal'
+        elif type(self.valor_contarsi) == int:  
+            tipo = 'Tk_Numero'
+        elif type(self.valor_contarsi) == str:  
+            tipo = 'Tk_Cadena' 
+        contenido = '''
+        \r\t\tn1[label = "Tk_ContarSi"];
+        \r\t\tn2[label = "Tk_Paren_Izq"]; 
+        \r\t\tn3[label = "Tk_Cadena"];   
+        \r\t\tn4[label = "Tk_Coma"]; 
+        \r\t\tn5[label = "<VALOR_CONTARSI>"];
+        \r\t\tn6[label = "'''+tipo+'''"];
+        \r\t\tn7[label = "Tk_Paren_Der"];       
+        \r\t\tn8[label = "Tk_Punto_Coma"]; 
+        \r\t\traiz -> n1;
+        \r\t\traiz -> n2;
+        \r\t\traiz -> n3;
+        \r\t\traiz -> n4;
+        \r\t\traiz -> n5;
+        \r\t\tn5 -> n6;
+        \r\t\traiz -> n7;
+        \r\t\traiz -> n8;'''
+        return contenido
     
     def Datos(self):
         self.Match(Token.DATOS)
@@ -414,15 +582,144 @@ class Sintactico:
         combo_reportes["values"] = ["Seleccione el Reporte", "Reporte Tokens", "Reporte Errores Léxico", "Reporte Error Sintáctico"]        
         values = list(combo_reportes["values"])   
         combo_reportes["values"] = values + self.nombres_arboles
-        for i in self.nombres_arboles:
-            print(i)
     
     def repetido(self, nombre_entrada):
         for nombres in self.nombres_arboles:
             if nombres == nombre_entrada:
                 return True
         return False
-    
+               
+    def Repetir(self):
+        if Token.CLAVES == self.preanalisis:
+            self.contenido_inicio += 'n'+str(self.contador_inicio)+'[label = "<REPETIR>"];\n'
+            self.contenido_inicio += 'n'+str(self.contador_inicio - 2)+' -> n'+str(self.contador_inicio)+';\n'
+            self.contador_inicio += 1
+            self.contenido_inicio += 'n'+str(self.contador_inicio)+'[label = "<CLAVES>"];\n'
+            self.contenido_inicio += 'n'+str(self.contador_inicio - 1)+' -> n'+str(self.contador_inicio)+';\n'
+            self.contador_inicio += 1
+            self.Claves()
+            self.Repetir()
+        elif Token.REGISTROS == self.preanalisis:
+            self.contenido_inicio += 'n'+str(self.contador_inicio)+'[label = "<REPETIR>"];\n'
+            self.contenido_inicio += 'n'+str(self.contador_inicio - 2)+' -> n'+str(self.contador_inicio)+';\n'
+            self.contador_inicio += 1
+            self.contenido_inicio += 'n'+str(self.contador_inicio)+'[label = "<REGISTROS>"];\n'
+            self.contenido_inicio += 'n'+str(self.contador_inicio - 1)+' -> n'+str(self.contador_inicio)+';\n'
+            self.contador_inicio += 1
+            self.Registros()
+            self.Repetir()
+        elif Token.COMENTARIO_LINEA == self.preanalisis:
+            self.contenido_inicio += 'n'+str(self.contador_inicio)+'[label = "<REPETIR>"];\n'
+            self.contenido_inicio += 'n'+str(self.contador_inicio - 2)+' -> n'+str(self.contador_inicio)+';\n'
+            self.contador_inicio += 1
+            self.contenido_inicio += 'n'+str(self.contador_inicio)+'[label = "<C0MENTARIO_LINEA>"];\n'
+            self.contenido_inicio += 'n'+str(self.contador_inicio - 1)+' -> n'+str(self.contador_inicio)+';\n'
+            self.contador_inicio += 1
+            self.Comentario()
+            self.Repetir()    
+        elif Token.COMENTARIO_MULTILINEA == self.preanalisis:
+            self.contenido_inicio += 'n'+str(self.contador_inicio)+'[label = "<REPETIR>"];\n'
+            self.contenido_inicio += 'n'+str(self.contador_inicio - 2)+' -> n'+str(self.contador_inicio)+';\n'
+            self.contador_inicio += 1
+            self.contenido_inicio += 'n'+str(self.contador_inicio)+'[label = "<COMENTARIO_MULTILINEA>"];\n'
+            self.contenido_inicio += 'n'+str(self.contador_inicio - 1)+' -> n'+str(self.contador_inicio)+';\n'
+            self.contador_inicio += 1
+            self.Comentario_Multilinea()
+            self.Repetir()     
+        elif Token.IMPRIMIR == self.preanalisis:
+            self.contenido_inicio += 'n'+str(self.contador_inicio)+'[label = "<REPETIR>"];\n'
+            self.contenido_inicio += 'n'+str(self.contador_inicio - 2)+' -> n'+str(self.contador_inicio)+';\n'
+            self.contador_inicio += 1
+            self.contenido_inicio += 'n'+str(self.contador_inicio)+'[label = "<IMPRIMIR>"];\n'
+            self.contenido_inicio += 'n'+str(self.contador_inicio - 1)+' -> n'+str(self.contador_inicio)+';\n'
+            self.contador_inicio += 1
+            self.Imprimir()
+            self.Repetir()
+        elif Token.IMPRIMIRLN == self.preanalisis:
+            self.contenido_inicio += 'n'+str(self.contador_inicio)+'[label = "<REPETIR>"];\n'
+            self.contenido_inicio += 'n'+str(self.contador_inicio - 2)+' -> n'+str(self.contador_inicio)+';\n'
+            self.contador_inicio += 1
+            self.contenido_inicio += 'n'+str(self.contador_inicio)+'[label = "<IMPRIMIRLN>"];\n'
+            self.contenido_inicio += 'n'+str(self.contador_inicio - 1)+' -> n'+str(self.contador_inicio)+';\n'
+            self.contador_inicio += 1
+            self.ImprimirLn()
+            self.Repetir()
+        elif Token.CONTEO == self.preanalisis:
+            self.contenido_inicio += 'n'+str(self.contador_inicio)+'[label = "<REPETIR>"];\n'
+            self.contenido_inicio += 'n'+str(self.contador_inicio - 2)+' -> n'+str(self.contador_inicio)+';\n'
+            self.contador_inicio += 1
+            self.contenido_inicio += 'n'+str(self.contador_inicio)+'[label = "<CONTEO>"];\n'
+            self.contenido_inicio += 'n'+str(self.contador_inicio - 1)+' -> n'+str(self.contador_inicio)+';\n'
+            self.contador_inicio += 1
+            self.Conteo()
+            self.Repetir()
+        elif Token.PROMEDIO == self.preanalisis:
+            self.contenido_inicio += 'n'+str(self.contador_inicio)+'[label = "<REPETIR>"];\n'
+            self.contenido_inicio += 'n'+str(self.contador_inicio - 2)+' -> n'+str(self.contador_inicio)+';\n'
+            self.contador_inicio += 1
+            self.contenido_inicio += 'n'+str(self.contador_inicio)+'[label = "<PROMEDIO>"];\n'
+            self.contenido_inicio += 'n'+str(self.contador_inicio - 1)+' -> n'+str(self.contador_inicio)+';\n'
+            self.contador_inicio += 1
+            self.Promedio()
+            self.Repetir()
+        elif Token.CONTARSI == self.preanalisis:
+            self.contenido_inicio += 'n'+str(self.contador_inicio)+'[label = "<REPETIR>"];\n'
+            self.contenido_inicio += 'n'+str(self.contador_inicio - 2)+' -> n'+str(self.contador_inicio)+';\n'
+            self.contador_inicio += 1
+            self.contenido_inicio += 'n'+str(self.contador_inicio)+'[label = "<CONTARSI>"];\n'
+            self.contenido_inicio += 'n'+str(self.contador_inicio - 1)+' -> n'+str(self.contador_inicio)+';\n'
+            self.contador_inicio += 1
+            self.ContarSi()
+            self.Repetir()
+        elif Token.DATOS == self.preanalisis:
+            self.contenido_inicio += 'n'+str(self.contador_inicio)+'[label = "<REPETIR>"];\n'
+            self.contenido_inicio += 'n'+str(self.contador_inicio - 2)+' -> n'+str(self.contador_inicio)+';\n'
+            self.contador_inicio += 1
+            self.contenido_inicio += 'n'+str(self.contador_inicio)+'[label = "<DATOS>"];\n'
+            self.contenido_inicio += 'n'+str(self.contador_inicio - 1)+' -> n'+str(self.contador_inicio)+';\n'
+            self.contador_inicio += 1
+            self.Datos()
+            self.Repetir()
+        elif Token.SUMAR == self.preanalisis:
+            self.contenido_inicio += 'n'+str(self.contador_inicio)+'[label = "<REPETIR>"];\n'
+            self.contenido_inicio += 'n'+str(self.contador_inicio - 2)+' -> n'+str(self.contador_inicio)+';\n'
+            self.contador_inicio += 1
+            self.contenido_inicio += 'n'+str(self.contador_inicio)+'[label = "<SUMAR>"];\n'
+            self.contenido_inicio += 'n'+str(self.contador_inicio - 1)+' -> n'+str(self.contador_inicio)+';\n'
+            self.contador_inicio += 1
+            self.Sumar()
+            self.Repetir()
+        elif Token.MAX == self.preanalisis:
+            self.contenido_inicio += 'n'+str(self.contador_inicio)+'[label = "<REPETIR>"];\n'
+            self.contenido_inicio += 'n'+str(self.contador_inicio - 2)+' -> n'+str(self.contador_inicio)+';\n'
+            self.contador_inicio += 1
+            self.contenido_inicio += 'n'+str(self.contador_inicio)+'[label = "<MAX>"];\n'
+            self.contenido_inicio += 'n'+str(self.contador_inicio - 1)+' -> n'+str(self.contador_inicio)+';\n'
+            self.contador_inicio += 1
+            self.Max()
+            self.Repetir()
+        elif Token.MIN == self.preanalisis:
+            self.contenido_inicio += 'n'+str(self.contador_inicio)+'[label = "<REPETIR>"];\n'
+            self.contenido_inicio += 'n'+str(self.contador_inicio - 2)+' -> n'+str(self.contador_inicio)+';\n'
+            self.contador_inicio += 1
+            self.contenido_inicio += 'n'+str(self.contador_inicio)+'[label = "<MIN>"];\n'
+            self.contenido_inicio += 'n'+str(self.contador_inicio - 1)+' -> n'+str(self.contador_inicio)+';\n'
+            self.contador_inicio += 1
+            self.Min()
+            self.Repetir()
+        elif Token.EXPORTARREPORTE == self.preanalisis:
+            self.contenido_inicio += 'n'+str(self.contador_inicio)+'[label = "<REPETIR>"];\n'
+            self.contenido_inicio += 'n'+str(self.contador_inicio - 2)+' -> n'+str(self.contador_inicio)+';\n'
+            self.contador_inicio += 1
+            self.contenido_inicio += 'n'+str(self.contador_inicio)+'[label = "<EXTRAERREPORTE>"];\n'
+            self.contenido_inicio += 'n'+str(self.contador_inicio - 1)+' -> n'+str(self.contador_inicio)+';\n'
+            self.contador_inicio += 1
+            self.Exportar_Reporte()
+            self.Repetir()
+        else:
+            if not self.repetido('Arbol Inicio'):
+                self.nombres_arboles.append('Arbol Inicio')
+                
     def crear_reporte_registro(self, nombre):
         makedirs('Reportes', exist_ok = True)
         self.obtener_datos(True)
@@ -471,50 +768,3 @@ class Sintactico:
         finally:         
             file.close()
             webbrowser.open_new_tab('Reportes\Reporte_Errores_Sintactico.html')
-    
-    def Repetir(self):
-        if Token.CLAVES == self.preanalisis:
-            self.Claves()
-            self.Repetir()
-        elif Token.REGISTROS == self.preanalisis:
-            self.Registros()
-            self.Repetir()
-        elif Token.COMENTARIO_LINEA == self.preanalisis:
-            self.Comentario()
-            self.Repetir()    
-        elif Token.COMENTARIO_MULTILINEA == self.preanalisis:
-            self.Comentario_Multilinea()
-            self.Repetir()     
-        elif Token.IMPRIMIR == self.preanalisis:
-            self.Imprimir()
-            self.Repetir()
-        elif Token.IMPRIMIRLN == self.preanalisis:
-            self.ImprimirLn()
-            self.Repetir()
-        elif Token.CONTEO == self.preanalisis:
-            self.Conteo()
-            self.Repetir()
-        elif Token.PROMEDIO == self.preanalisis:
-            self.Promedio()
-            self.Repetir()
-        elif Token.CONTARSI == self.preanalisis:
-            self.ContarSi()
-            self.Repetir()
-        elif Token.DATOS == self.preanalisis:
-            self.Datos()
-            self.Repetir()
-        elif Token.SUMAR == self.preanalisis:
-            self.Sumar()
-            self.Repetir()
-        elif Token.MAX == self.preanalisis:
-            self.Max()
-            self.Repetir()
-        elif Token.MIN == self.preanalisis:
-            self.Min()
-            self.Repetir()
-        elif Token.EXPORTARREPORTE == self.preanalisis:
-            self.Exportar_Reporte()
-            self.Repetir()
-        else:
-            if not self.repetido('Arbol Inicio'):
-                self.nombres_arboles.append('Arbol Inicio')
