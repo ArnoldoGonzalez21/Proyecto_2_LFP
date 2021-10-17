@@ -67,7 +67,8 @@ class Interfaz():
         self.sintactico = Sintactico(tkinter, self.lexico.tokens, self.txt_consola)
         self.txt_consola.configure(state = 'disabled')
         self.sintactico.opciones_reporte_arbol(self.combo_reportes)        
-        self.lexico.obtener_tokens()      
+        self.lexico.obtener_tokens()   
+        self.lexico.obtener_errores_lexico()  
         self.sintactico.reniciar()
     
     def configuracion_combo(self, toolbar):    

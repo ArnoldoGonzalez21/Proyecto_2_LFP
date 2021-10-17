@@ -21,6 +21,8 @@ class Analizador():
         self.estado = 0
             
     def analizador_estados(self, entrada):
+        self.reporteHTML_errores = ''
+        self.reporteHTML_token = ''
         self.estado = 0
         self.lexema = ''
         self.tokens = []
@@ -282,7 +284,7 @@ class Analizador():
     def obtener_tokens(self):
         font = '<font color=\"#000000\" face=\"Courier\">'
         for x in self.tokens:
-            if x.tipo != self.tipos.ERROR:
+            if x.tipo != self.tipos.ERROR and x.tipo != self.tipos.ULTIMO:
                 self.reporteHTML_token += '<tr><td align=center>'+ font + x.get_tipo() + '</td><td align=center>'+ font + x.get_lexema() + '</td><td align=center>'+ font + str(x.get_fila()) + '</td><td align=center>'+ font + str(x.get_columna()) + '</td></tr>'
                 #print(x.get_lexema()," --> ",x.get_tipo(),' --> ',x.get_fila(), ' --> ',x.get_columna())
     
@@ -294,7 +296,6 @@ class Analizador():
                 #print(x.get_lexema()," --> ",x.get_fila(), ' --> ',x.get_columna(),'--> Error Lexico')                                      
      
     def crear_reporte_token(self):
-        self.obtener_tokens()
         makedirs('Reportes', exist_ok = True)
         try: 
             file = open('Reportes/Reporte_Tokens.html','w')
@@ -322,7 +323,6 @@ class Analizador():
             webbrowser.open_new_tab('Reportes\Reporte_Tokens.html')
         
     def crear_reporte_errores(self):
-        self.obtener_errores_lexico()
         makedirs('Reportes', exist_ok = True)
         try: 
             file = open('Reportes/Reporte_Errores_Lexico.html','w')

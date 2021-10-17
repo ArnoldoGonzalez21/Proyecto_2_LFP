@@ -2,25 +2,27 @@ from os import system, startfile, makedirs
 
 class Arboles():
     
+    dic_arboles = {'comentario': '', 'comentario_multi':'', 'imprimir':'', 'imprimirln':'','cadena_contar':'','valor_contar':'','promedio':'','sumar':'', 'max':'', 'min':'','reporte':''}
+    
     def arbol_comentario_linea(self):
         contenido = '''
-        \r\t\tn1[label = "Tk_Comentario_Linea"];
+        \r\t\tn1[label = "'''+self.dic_arboles.get('comentario')+'''"];
         \r\t\traiz -> n1;'''
         return contenido
     
     def arbol_comentario_multilinea(self):
         contenido = '''
-        \r\t\tn1[label = "Tk_Comentario_Multilinea"];
+        \r\t\tn1[label = "'''+self.dic_arboles.get('comentario_multi')+'''"];
         \r\t\traiz -> n1;'''
         return contenido
     
     def arbol_imprimir(self):
         contenido = '''
-        \r\t\tn1[label = "Tk_Imprimir"];
-        \r\t\tn2[label = "Tk_Paren_Izq"]; 
-        \r\t\tn3[label = "Tk_Cadena"];   
-        \r\t\tn4[label = "Tk_Paren_Der"];       
-        \r\t\tn5[label = "Tk_Punto_Coma"]; 
+        \r\t\tn1[label = "imprimir"];
+        \r\t\tn2[label = "("]; 
+        \r\t\tn3[label = "'''+self.dic_arboles.get('imprimir')+'''"];
+        \r\t\tn4[label = ")"];       
+        \r\t\tn5[label = ";"]; 
         \r\t\traiz -> n1;
         \r\t\traiz -> n2;
         \r\t\traiz -> n3;
@@ -30,11 +32,11 @@ class Arboles():
     
     def arbol_imprimirln(self):
         contenido = '''
-        \r\t\tn1[label = "Tk_ImprimirLn"];
-        \r\t\tn2[label = "Tk_Paren_Izq"]; 
-        \r\t\tn3[label = "Tk_Cadena"];   
-        \r\t\tn4[label = "Tk_Paren_Der"];       
-        \r\t\tn5[label = "Tk_Punto_Coma"]; 
+        \r\t\tn1[label = "imprimirln"];
+        \r\t\tn2[label = "("]; 
+        \r\t\tn3[label = "'''+self.dic_arboles.get('imprimirln')+'''"];  
+        \r\t\tn4[label = ")"];       
+        \r\t\tn5[label = ";"]; 
         \r\t\traiz -> n1;
         \r\t\traiz -> n2;
         \r\t\traiz -> n3;
@@ -44,10 +46,10 @@ class Arboles():
     
     def arbol_conteo(self):
         contenido = '''
-        \r\t\tn1[label = "Tk_Conteo"];
-        \r\t\tn2[label = "Tk_Paren_Izq"]; 
-        \r\t\tn3[label = "Tk_Paren_Der"];       
-        \r\t\tn4[label = "Tk_Punto_Coma"]; 
+        \r\t\tn1[label = "conteo"];
+        \r\t\tn2[label = "("]; 
+        \r\t\tn3[label = ")"];       
+        \r\t\tn4[label = ";"]; 
         \r\t\traiz -> n1;
         \r\t\traiz -> n2;
         \r\t\traiz -> n3;
@@ -56,11 +58,11 @@ class Arboles():
     
     def arbol_promedio(self):
         contenido = '''
-        \r\t\tn1[label = "Tk_Promedio"];
-        \r\t\tn2[label = "Tk_Paren_Izq"]; 
-        \r\t\tn3[label = "Tk_Cadena"];   
-        \r\t\tn4[label = "Tk_Paren_Der"];       
-        \r\t\tn5[label = "Tk_Punto_Coma"]; 
+        \r\t\tn1[label = "promedio"];
+        \r\t\tn2[label = "("]; 
+        \r\t\tn3[label = "'''+self.dic_arboles.get('promedio')+'''"];   
+        \r\t\tn4[label = ")"];       
+        \r\t\tn5[label = ";"]; 
         \r\t\traiz -> n1;
         \r\t\traiz -> n2;
         \r\t\traiz -> n3;
@@ -70,10 +72,10 @@ class Arboles():
     
     def arbol_datos(self):
         contenido = '''
-        \r\t\tn1[label = "Tk_Datos"];
-        \r\t\tn2[label = "Tk_Paren_Izq"];  
-        \r\t\tn3[label = "Tk_Paren_Der"];       
-        \r\t\tn4[label = "Tk_Punto_Coma"]; 
+        \r\t\tn1[label = "datos"];
+        \r\t\tn2[label = "("];  
+        \r\t\tn3[label = ")"];       
+        \r\t\tn4[label = ";"]; 
         \r\t\traiz -> n1;
         \r\t\traiz -> n2;
         \r\t\traiz -> n3;
@@ -82,11 +84,11 @@ class Arboles():
     
     def arbol_sumar(self):
         contenido = '''
-        \r\t\tn1[label = "Tk_Sumar"];
-        \r\t\tn2[label = "Tk_Paren_Izq"]; 
-        \r\t\tn3[label = "Tk_Cadena"];   
-        \r\t\tn4[label = "Tk_Paren_Der"];       
-        \r\t\tn5[label = "Tk_Punto_Coma"]; 
+        \r\t\tn1[label = "sumar"];
+        \r\t\tn2[label = "("]; 
+        \r\t\tn3[label = "'''+self.dic_arboles.get('sumar')+'''"];  
+        \r\t\tn4[label = ")"];       
+        \r\t\tn5[label = ";"]; 
         \r\t\traiz -> n1;
         \r\t\traiz -> n2;
         \r\t\traiz -> n3;
@@ -96,11 +98,11 @@ class Arboles():
     
     def arbol_max(self):
         contenido = '''
-        \r\t\tn1[label = "Tk_Max"];
-        \r\t\tn2[label = "Tk_Paren_Izq"]; 
-        \r\t\tn3[label = "Tk_Cadena"];   
-        \r\t\tn4[label = "Tk_Paren_Der"];       
-        \r\t\tn5[label = "Tk_Punto_Coma"]; 
+        \r\t\tn1[label = "max"];
+        \r\t\tn2[label = "("]; 
+        \r\t\tn3[label = "'''+self.dic_arboles.get('max')+'''"];  
+        \r\t\tn4[label = ")"];       
+        \r\t\tn5[label = ";"]; 
         \r\t\traiz -> n1;
         \r\t\traiz -> n2;
         \r\t\traiz -> n3;
@@ -110,11 +112,11 @@ class Arboles():
     
     def arbol_min(self):
         contenido = '''
-        \r\t\tn1[label = "Tk_Min"];
-        \r\t\tn2[label = "Tk_Paren_Izq"]; 
-        \r\t\tn3[label = "Tk_Cadena"];   
-        \r\t\tn4[label = "Tk_Paren_Der"];       
-        \r\t\tn5[label = "Tk_Punto_Coma"]; 
+        \r\t\tn1[label = "min"];
+        \r\t\tn2[label = "("]; 
+        \r\t\tn3[label = "'''+self.dic_arboles.get('min')+'''"];   
+        \r\t\tn4[label = ")"];       
+        \r\t\tn5[label = ";"]; 
         \r\t\traiz -> n1;
         \r\t\traiz -> n2;
         \r\t\traiz -> n3;
@@ -124,11 +126,11 @@ class Arboles():
     
     def arbol_exportar_reporte(self):
         contenido = '''
-        \r\t\tn1[label = "Tk_Exp_Repo"];
-        \r\t\tn2[label = "Tk_Paren_Izq"]; 
-        \r\t\tn3[label = "Tk_Cadena"];   
-        \r\t\tn4[label = "Tk_Paren_Der"];       
-        \r\t\tn5[label = "Tk_Punto_Coma"]; 
+        \r\t\tn1[label = "exportarReporte"];
+        \r\t\tn2[label = "("]; 
+        \r\t\tn3[label = "'''+self.dic_arboles.get('reporte')+'''"];   
+        \r\t\tn4[label = ")"];       
+        \r\t\tn5[label = ";"]; 
         \r\t\traiz -> n1;
         \r\t\traiz -> n2;
         \r\t\traiz -> n3;

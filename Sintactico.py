@@ -158,7 +158,7 @@ class Sintactico:
         self.Match(Token.IGUAL)
         self.Match(Token.CORCHETE_IZQUIERDO)
         self.Cuerpo_Claves()
-        self.contenido_claves += 'n'+str(self.contador_claves)+'[label = "Tk_Crch_Dr"];\n'
+        self.contenido_claves += 'n'+str(self.contador_claves)+'[label = "]"];\n'
         self.contenido_claves += 'raiz -> n'+str(self.contador_claves)+';'       
         self.Match(Token.CORCHETE_DERECHO)
         
@@ -176,12 +176,12 @@ class Sintactico:
             self.contenido_claves += 'n'+str(self.contador_claves)+'[label = "<BLOQUE_CLAVES>"];\n'
             self.contenido_claves += 'n'+str(self.contador_claves)+' -> n'+str(self.contador_claves + 1)+';\n'
             self.contador_claves += 1
-            self.contenido_claves += 'n'+str(self.contador_claves)+'[label = "Tk_Cadena"];\n'
+            self.contenido_claves += 'n'+str(self.contador_claves)+'[label = "'+nombre.replace('_',' ')+'"];\n'
             self.contador_claves += 1
             
             self.Match(Token.CADENA)
         if Token.COMA == self.preanalisis:
-            self.contenido_claves += 'n'+str(self.contador_claves)+'[label = "Tk_Coma"];\n'
+            self.contenido_claves += 'n'+str(self.contador_claves)+'[label = ","];\n'
             self.contenido_claves += 'n'+str(self.contador_claves - 2)+' -> n'+str(self.contador_claves)+';\n'
             self.contenido_claves += 'n'+str(self.contador_claves - 2)+' -> n'+str(self.contador_claves + 1)+';\n'
             self.contador_claves += 1
@@ -190,9 +190,9 @@ class Sintactico:
     
     def arbol_claves(self):
         contenido = '''
-        \r\t\tn1[label = "Tk_Claves"];
-        \r\t\tn2[label = "Tk_Igual"];
-        \r\t\tn3[label = "Tk_Crch_Iz"];  
+        \r\t\tn1[label = "Claves"];
+        \r\t\tn2[label = "="];
+        \r\t\tn3[label = "["];  
         \r\t\traiz -> n1;
         \r\t\traiz -> n2;
         \r\t\traiz -> n3;
@@ -212,7 +212,7 @@ class Sintactico:
         self.contenido_registros += 'n'+str(self.contador_registros)+'[label = "<BLOQUE_REGISTROS>"];\n'
         self.contador_registros += 1
         self.Bloque_Registros()
-        self.contenido_registros += 'n'+str(self.contador_registros)+'[label = "Tk_Crch_Der"];\n'
+        self.contenido_registros += 'n'+str(self.contador_registros)+'[label = "]"];\n'
         self.contenido_registros += 'raiz -> n'+str(self.contador_registros)+';\n'
         self.contador_registros += 1
         self.Match(Token.CORCHETE_DERECHO)
@@ -226,7 +226,7 @@ class Sintactico:
             self.contenido_registros += 'n'+str(self.contador_registros - 1)+' -> n'+str(self.contador_registros)+';\n'
             self.contador_registros += 1
             self.Cuerpo_Registros()
-            if Token.LLAVE_IZQUIERDA == self.preanalisis: #Creo que si
+            if Token.LLAVE_IZQUIERDA == self.preanalisis:
                 self.contenido_registros += 'n'+str(self.contador_registros)+'[label = "<BLOQUE_REGISTROS>"];\n'
                 self.contenido_registros += 'n'+str(tmp - 1)+' -> n'+str(self.contador_registros)+';\n'
                 self.contador_registros += 1
@@ -235,7 +235,7 @@ class Sintactico:
     def Cuerpo_Registros(self):
         tmp = self.contador_registros
         self.Match(Token.LLAVE_IZQUIERDA)
-        self.contenido_registros += 'n'+str(self.contador_registros)+'[label = "Tk_Llave_Izq"];\n'
+        self.contenido_registros += 'n'+str(self.contador_registros)+'[label = "{"];\n'
         self.contenido_registros += 'n'+str(self.contador_registros - 1)+' -> n'+str(self.contador_registros)+';\n'
         self.contador_registros += 1
         
@@ -244,7 +244,7 @@ class Sintactico:
         self.contador_registros += 1
         
         self.valor_registro()
-        self.contenido_registros += 'n'+str(self.contador_registros)+'[label = "Tk_Llave_Der"];\n'
+        self.contenido_registros += 'n'+str(self.contador_registros)+'[label = "}"];\n'
         self.contenido_registros += 'n'+str(tmp - 1)+' -> n'+str(self.contador_registros)+';\n'
         self.contador_registros += 1
         self.Match(Token.LLAVE_DERECHA)
@@ -252,9 +252,9 @@ class Sintactico:
               
     def valor_registro(self):
         if Token.NUMERO == self.preanalisis:
-            nuevo = self.lista[self.posicion].lexema_valido
+            nuevo = int(self.lista[self.posicion].lexema_valido)
             self.valores_registro.append(nuevo)
-            self.contenido_registros += 'n'+str(self.contador_registros)+'[label = "Tk_Numero"];\n'
+            self.contenido_registros += 'n'+str(self.contador_registros)+'[label = "' + str(nuevo) + '"];\n'
             self.contenido_registros += 'n'+str(self.contador_registros - 1)+' -> n'+str(self.contador_registros)+';\n'
             self.contador_registros += 1
             self.Match(Token.NUMERO)
@@ -262,19 +262,19 @@ class Sintactico:
             nuevo = self.lista[self.posicion].lexema_valido
             nuevo = nuevo.replace('"','')
             self.valores_registro.append(nuevo)
-            self.contenido_registros += 'n'+str(self.contador_registros)+'[label = "Tk_Cadena"];\n'
+            self.contenido_registros += 'n'+str(self.contador_registros)+'[label = "' + nuevo + '"];\n'
             self.contenido_registros += 'n'+str(self.contador_registros - 1)+' -> n'+str(self.contador_registros)+';\n'
             self.contador_registros += 1
             self.Match(Token.CADENA)    
         elif Token.DECIMAL == self.preanalisis:
-            nuevo = self.lista[self.posicion].lexema_valido
+            nuevo = float(self.lista[self.posicion].lexema_valido)
             self.valores_registro.append(nuevo)
-            self.contenido_registros += 'n'+str(self.contador_registros)+'[label = "Tk_Decimal"];\n'
+            self.contenido_registros += 'n'+str(self.contador_registros)+'[label = "' +str(nuevo) + '"];\n'
             self.contenido_registros += 'n'+str(self.contador_registros - 1)+' -> n'+str(self.contador_registros)+';\n'
             self.contador_registros += 1
             self.Match(Token.DECIMAL)
         if Token.COMA == self.preanalisis:
-            self.contenido_registros += 'n'+str(self.contador_registros)+'[label = "Tk_Coma"];\n'
+            self.contenido_registros += 'n'+str(self.contador_registros)+'[label = ","];\n'
             self.contenido_registros += 'n'+str(self.contador_registros - 2)+' -> n'+str(self.contador_registros)+';\n'
             self.contador_registros += 1
             self.contenido_registros += 'n'+str(self.contador_registros)+'[label = "<VALOR_REGISTROS>"];\n'
@@ -294,9 +294,9 @@ class Sintactico:
     
     def arbol_registros(self):
         contenido = '''
-        \r\t\tn1[label = "Tk_Registros"];
-        \r\t\tn2[label = "Tk_Igual"];
-        \r\t\tn3[label = "Tk_Crch_Izq"]; 
+        \r\t\tn1[label = "Registros"];
+        \r\t\tn2[label = "="];
+        \r\t\tn3[label = "["]; 
         \r\t\traiz -> n1;
         \r\t\traiz -> n2;
         \r\t\traiz -> n3;
@@ -305,12 +305,18 @@ class Sintactico:
         return contenido
     
     def Comentario(self):
+        comentario = self.lista[self.posicion].lexema_valido
+        comentario = comentario.replace('\\','\\\\')
         self.Match(Token.COMENTARIO_LINEA)
+        self.arboles.dic_arboles['comentario'] = comentario.replace('#','')
         if not self.repetido('Arbol Comentario Linea'):
             self.nombres_arboles.append('Arbol Comentario Linea')
     
     def Comentario_Multilinea(self):
+        comentario = self.lista[self.posicion].lexema_valido
+        comentario = comentario.replace('\\','\\\\')
         self.Match(Token.COMENTARIO_MULTILINEA)
+        self.arboles.dic_arboles['comentario_multi'] = comentario.replace("'","")
         if not self.repetido('Arbol Comentario MultiLinea'):
             self.nombres_arboles.append('Arbol Comentario MultiLinea')
         
@@ -324,6 +330,8 @@ class Sintactico:
         
         print_consola = print_consola.replace('"','')
         self.txt_consola.insert(self.tkinter.INSERT, print_consola)
+        print_consola = print_consola.replace('\\','\\\\')
+        self.arboles.dic_arboles['imprimir'] = print_consola
         if not self.repetido('Arbol Imprimir'):
             self.nombres_arboles.append('Arbol Imprimir')
         
@@ -337,6 +345,8 @@ class Sintactico:
         
         print_consola = print_consola.replace('"','')
         self.txt_consola.insert(self.tkinter.INSERT, '\n' + print_consola + '\n') 
+        print_consola = print_consola.replace('\\','\\\\')
+        self.arboles.dic_arboles['imprimirln'] = print_consola
         if not self.repetido('Arbol ImprimirLn'):
             self.nombres_arboles.append('Arbol ImprimirLn') 
         
@@ -347,7 +357,7 @@ class Sintactico:
         self.Match(Token.PUNTO_Y_COMA)
         
         print_consola = len(self.registros.valores)
-        self.txt_consola.insert(self.tkinter.INSERT, '>>> ' + str(print_consola))  
+        self.txt_consola.insert(self.tkinter.INSERT, '>>> ' + str(print_consola) + '\n')  
         if not self.repetido('Arbol Conteo'):
             self.nombres_arboles.append('Arbol Conteo')
 
@@ -360,6 +370,7 @@ class Sintactico:
         self.Match(Token.PUNTO_Y_COMA) 
         campo = campo.replace('"','')
         self.obtener_promedio_suma(campo, True)
+        self.arboles.dic_arboles['promedio'] = campo
         if not self.repetido('Arbol Promedio'):
             self.nombres_arboles.append('Arbol Promedio')
     
@@ -372,12 +383,14 @@ class Sintactico:
                 break
         if indice != -1:
             for i in range(len(self.registros.valores)):
-                suma += int(self.registros.valores[i].args[0][indice])
-        if es_promedio and len(self.registros.valores) != 0:
-            promedio = suma/len(self.registros.valores) 
-            self.txt_consola.insert(self.tkinter.INSERT, '>>> ' + str(promedio))  
+                suma += self.registros.valores[i].args[0][indice]
+            if es_promedio and len(self.registros.valores) != 0:
+                promedio = suma/len(self.registros.valores) 
+                self.txt_consola.insert(self.tkinter.INSERT, '>>> ' + str(promedio) + '\n')  
+            else:
+                self.txt_consola.insert(self.tkinter.INSERT, '>>> ' + str(suma) + '\n')  
         else:
-            self.txt_consola.insert(self.tkinter.INSERT, '>>> ' + str(suma))   
+            self.txt_consola.insert(self.tkinter.INSERT, '>>> No se pudo encontrar el campo especificado\n')                 
         
     def ContarSi(self):
         self.Match(Token.CONTARSI)
@@ -390,30 +403,33 @@ class Sintactico:
         self.Match(Token.PUNTO_Y_COMA)  
         campo = campo.replace('"','')        
         self.obtener_contar_si(campo, valor)
+        self.arboles.dic_arboles['cadena_contar'] = campo
+        self.arboles.dic_arboles['valor_contar'] = valor
         if not self.repetido('Arbol ContarSi'):
             self.nombres_arboles.append('Arbol ContarSi')
     
-    def valor_contarSi(self):
+    def valor_contarSi(self): 
+        if self.errorSintactico:
+            return
         if Token.NUMERO == self.preanalisis:
             valor = self.lista[self.posicion].lexema_valido
             valor = int(valor)
-            self.valor_contarsi = valor
             self.Match(Token.NUMERO)
             return valor  
         elif Token.DECIMAL == self.preanalisis:
             valor = self.lista[self.posicion].lexema_valido
             valor = float(valor)
-            self.valor_contarsi = valor
             self.Match(Token.DECIMAL)
             return valor  
         elif Token.CADENA == self.preanalisis:
             dato: str = self.lista[self.posicion].lexema_valido
             dato = dato.replace('"',"")
-            self.valor_contarsi = dato
             self.Match(Token.CADENA)
             return dato                        
         
-    def obtener_contar_si(self, campo, valor):
+    def obtener_contar_si(self, campo, valor): 
+        if self.errorSintactico:
+            return
         indice = -1
         contador = 0
         for claves in self.valores_clave:
@@ -432,26 +448,19 @@ class Sintactico:
                     if valor.replace(" ","").upper() == self.registros.valores[i].args[0][indice].replace(" ","").upper():
                         contador += 1              
             self.txt_consola.insert(self.tkinter.INSERT, '>>> ' + str(contador)+'\n')   
-    
-    valor_contarsi = ''
-    
+        else:
+            self.txt_consola.insert(self.tkinter.INSERT, '>>> No se pudo encontrar el campo especificado\n') 
+        
     def arbol_contarsi(self):
-        tipo = ''
-        if type(self.valor_contarsi) == float:
-            tipo = 'Tk_Decimal'
-        elif type(self.valor_contarsi) == int:  
-            tipo = 'Tk_Numero'
-        elif type(self.valor_contarsi) == str:  
-            tipo = 'Tk_Cadena' 
         contenido = '''
-        \r\t\tn1[label = "Tk_ContarSi"];
-        \r\t\tn2[label = "Tk_Paren_Izq"]; 
-        \r\t\tn3[label = "Tk_Cadena"];   
-        \r\t\tn4[label = "Tk_Coma"]; 
+        \r\t\tn1[label = "contarsi"];
+        \r\t\tn2[label = "("]; 
+        \r\t\tn3[label = "'''+self.arboles.dic_arboles.get('cadena_contar')+'''"];  
+        \r\t\tn4[label = ","]; 
         \r\t\tn5[label = "<VALOR_CONTARSI>"];
-        \r\t\tn6[label = "'''+tipo+'''"];
-        \r\t\tn7[label = "Tk_Paren_Der"];       
-        \r\t\tn8[label = "Tk_Punto_Coma"]; 
+        \r\t\tn6[label = "'''+str(self.arboles.dic_arboles.get('valor_contar'))+'''"];
+        \r\t\tn7[label = ")"];       
+        \r\t\tn8[label = ";"]; 
         \r\t\traiz -> n1;
         \r\t\traiz -> n2;
         \r\t\traiz -> n3;
@@ -488,8 +497,8 @@ class Sintactico:
         for i in range(len(self.registros.valores)):
             self.reporteHTML_registro += '<tr>'
             for claves in self.valores_clave:
-                contenido += self.registros.valores[i].args[0][claves.get_indice()]
-                self.reporteHTML_registro += '<td align=center><font color=\"#000000\" face=\"Courier\">'+self.registros.valores[i].args[0][claves.get_indice()]+'</td>'
+                contenido += str(self.registros.valores[i].args[0][claves.get_indice()])
+                self.reporteHTML_registro += '<td align=center><font color=\"#000000\" face=\"Courier\">'+str(self.registros.valores[i].args[0][claves.get_indice()])+'</td>'
                 contador += 1
                 if contador != len(self.valores_clave):
                     contenido += ' - '
@@ -511,6 +520,7 @@ class Sintactico:
         self.Match(Token.PUNTO_Y_COMA)  
         campo = campo.replace('"','')
         self.obtener_promedio_suma(campo, False)
+        self.arboles.dic_arboles['sumar'] = campo
         if not self.repetido('Arbol Sumar'):
             self.nombres_arboles.append('Arbol Sumar')
     
@@ -523,13 +533,14 @@ class Sintactico:
         self.Match(Token.PUNTO_Y_COMA)  
         campo = campo.replace('"','')
         self.obtener_max_min(campo, True)
+        self.arboles.dic_arboles['max'] = campo
         if not self.repetido('Arbol Max'):
             self.nombres_arboles.append('Arbol Max')
         
     def obtener_max_min(self, campo, es_max):
         indice = -1
         maximo = 0
-        minimo = 100000
+        minimo = 100000000000
         tmp = 0
         for claves in self.valores_clave:
             if claves.get_nombre() == campo:
@@ -542,11 +553,16 @@ class Sintactico:
                     maximo = tmp
                 if tmp < minimo:
                     minimo = tmp 
-        if es_max:               
-            self.txt_consola.insert(self.tkinter.INSERT, '>>> ' + str(maximo))
+            if es_max:               
+                self.txt_consola.insert(self.tkinter.INSERT, '>>> ' + str(maximo) + '\n')
+            else:
+                if minimo == 100000000000:
+                    self.txt_consola.insert(self.tkinter.INSERT, '>>> 0\n')   
+                else:
+                    self.txt_consola.insert(self.tkinter.INSERT, '>>> ' + str(minimo) + '\n')         
         else:
-            self.txt_consola.insert(self.tkinter.INSERT, '>>> ' + str(minimo))    
-        
+            self.txt_consola.insert(self.tkinter.INSERT, '>>> No se pudo encontrar el campo especificado\n') 
+               
     def Min(self):
         self.Match(Token.MIN)
         self.Match(Token.PARENTESIS_IZQUIERDO)
@@ -556,6 +572,7 @@ class Sintactico:
         self.Match(Token.PUNTO_Y_COMA)  
         campo = campo.replace('"','') 
         self.obtener_max_min(campo, False)  
+        self.arboles.dic_arboles['min'] = campo
         if not self.repetido('Arbol Min'):
             self.nombres_arboles.append('Arbol Min') 
         
@@ -568,6 +585,7 @@ class Sintactico:
         self.Match(Token.PUNTO_Y_COMA)   
         nombre = nombre.replace('"','')    
         self.crear_reporte_registro(nombre)
+        self.arboles.dic_arboles['reporte'] = nombre
         if not self.repetido('Arbol Exportar Reporte'):
             self.nombres_arboles.append('Arbol Exportar Reporte')
     
